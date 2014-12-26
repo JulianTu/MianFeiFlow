@@ -1,0 +1,82 @@
+//
+//  UploadingView.m
+//  免费流量王
+//
+//  Created by keyrun on 14-11-17.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "UploadingView.h"
+#import "TaoJinLabel.h"
+@interface UploadingView ()
+@property (nonatomic ,strong) TaoJinLabel *tipLabel ;
+@property (nonatomic ,strong) UIView *blackView ;
+@property (nonatomic ,strong) UIView *bgView;
+@property (nonatomic ,strong) UIActivityIndicatorView *activity ;
+@property (nonatomic ,strong) UIWindow *overlayWindow ;
+@end
+
+@implementation UploadingView
+@synthesize tipLabel =_tipLabel ;
+@synthesize blackView =_blackView ;
+@synthesize bgView =_bgView ;
+@synthesize activity =_activity ;
+@synthesize overlayWindow =_overlayWindow ;
++(UploadingView *)shareUploadView {
+    static UploadingView *view =nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        view = [[UploadingView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    });
+    return view;
+}
+-(instancetype)initWithFrame:(CGRect)frame{
+    self =[super initWithFrame:frame];
+    if (self) {
+        
+        _bgView =[[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        _bgView.alpha =0.7f;
+        _bgView.backgroundColor = ColorRGB(77.0, 77.0, 77.0, 1.0);
+       
+        _activity =[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _activity.center = CGPointMake(kmainScreenWidth/2, kmainScreenHeigh/2);
+        [_activity startAnimating];
+//        _blackView = [[UIView alloc] initWithFrame:CGRectMake(_activity.frame.origin.x -5.0f, _activity.frame.origin.y -5.0f, _activity.frame.size.width +10.0f, _activity.frame.size.height +10.0f)];
+//        _blackView.backgroundColor = [UIColor blackColor];
+        
+       
+        _tipLabel =[[TaoJinLabel alloc] initWithFrame:CGRectMake(0,  _activity.frame.origin.y  +_activity.frame.size.height + 15.0f, kmainScreenWidth, 17) text:nil font:GetFont(16.0) textColor:kWitheColor textAlignment:NSTextAlignmentCenter numberLines:1];
+        
+        _overlayWindow=[[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+        _overlayWindow.autoresizingMask=UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _overlayWindow.userInteractionEnabled=NO;
+        _overlayWindow.windowLevel=UIWindowLevelStatusBar;
+        
+        [_overlayWindow addSubview:self];
+        [_overlayWindow makeKeyAndVisible];
+        
+        [self addSubview:_bgView];
+//        [self addSubview:_blackView];
+        [self addSubview:_activity];
+        
+        [self addSubview:_tipLabel];
+    }
+    return self;
+}
+-(BOOL) isUploading{
+    return [_activity isAnimating];
+}
+-(void) showWithText:(NSString *)text andViewControler:(UIViewController *)vc{
+
+    _overlayWindow.hidden =NO;
+    if ([_activity isAnimating] ==NO) {
+        [_activity startAnimating];
+    }
+    _tipLabel.text = text;
+    
+}
+-(void) dismiss{
+    [_activity stopAnimating];
+    [_overlayWindow setHidden:YES];
+}
+@end

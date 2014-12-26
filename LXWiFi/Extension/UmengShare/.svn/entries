@@ -1,0 +1,41 @@
+10
+
+dir
+350
+http://10.1.1.14:83/wifi/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare
+http://10.1.1.14:83/wifi
+
+
+
+2014-11-24T20:07:42.854026Z
+350
+sunhl
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+7581b61f-d13e-4cf8-a74d-9829bac377aa
+
+
+
+
+
+
+0
+
+UMSocial_Sdk_4.2
+dir
+
+UMSocial_Sdk_Extra_Frameworks
+dir
+

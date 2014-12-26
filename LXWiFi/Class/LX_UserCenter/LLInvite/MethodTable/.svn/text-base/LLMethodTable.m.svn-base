@@ -1,0 +1,131 @@
+//
+//  LLMethodTable.m
+//  免费流量王
+//
+//  Created by keyrun on 14-10-15.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "LLMethodTable.h"
+#import "ShareMethodCell.h"
+#import "LLAsynURLConnection.h"
+#import "LoadingView.h"
+#import "UIAlertView+NetPrompt.h"
+#define kMethodCellH      65.0f
+@implementation LLMethodTable
+{
+    NSArray *methods ;
+    int failCount ;
+}
+-(instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
+    self = [super initWithFrame:frame style:style];
+    if (self) {
+        
+        self.separatorStyle = UITableViewCellSeparatorStyleNone ;
+        self.delegate =self;
+        self.dataSource =self;
+        
+    }
+    return self;
+}
+- (void) initShareMethodData{
+    failCount = 0;
+    methods =[[NSArray alloc] init];
+    [self performSelector:@selector(requestForShareMethod) onThread:[NSThread currentThread] withObject:nil waitUntilDone:NO];
+}
+/**
+*  请求分享方法
+*/
+-(void) requestForShareMethod{
+    if (![[LoadingView showLoadingView] actViewIsAnimation]) {
+        [[LoadingView showLoadingView] actViewStartAnimation];
+    }
+    NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"invite/strategy"];
+    [LLAsynURLConnection requestForMethodGetWithURL:urlStr dataDic:nil andProtocolNum:@"70004" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+           NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+           NSLog(@" 获取分享攻略数据 == %@ ",dataDic);
+           if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+               NSDictionary *body =[dataDic objectForKey:@"body"];
+               methods = [body objectForKey:@"list"];
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   [self reloadData];
+               });
+           }
+       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+        });
+    } andFailBlock:^(NSError *error) {
+        if(error.code == timeOutErrorCode){
+            if(failCount < 2){
+                failCount ++;
+                [self requestForShareMethod];
+            }else{
+                [[LoadingView showLoadingView] actViewStopAnimation];
+                failCount = 0;
+                self.tableFooterView.hidden = YES;
+                if(![UIAlertView isInit]){
+                    UIAlertView *alertView = [UIAlertView showNetAlert];
+                    alertView.tag = kTimeOutTag;
+                    alertView.delegate = self;
+                    [alertView show];
+                }
+            }
+        }else{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+            self.tableFooterView.hidden = YES;
+        }
+
+    }];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(alertView.tag == kTimeOutTag){
+        if(buttonIndex == 0){
+            [alertView dismissWithClickedButtonIndex:0 animated:YES];
+            [UIAlertView resetNetAlertNil];
+            [[LoadingView showLoadingView] actViewStartAnimation];
+            [self requestForShareMethod];
+        }
+    }
+    
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return methods.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *string = @"cellID";
+    ShareMethodCell *cell =[tableView dequeueReusableCellWithIdentifier:string];
+    if (!cell) {
+        cell = [[ShareMethodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:string];
+    }
+    NSDictionary *dic =[methods objectAtIndex:indexPath.row];
+    [cell loadMethodCellWith:[dic objectForKey:@"title"] andContent:[dic objectForKey:@"sub_title"]];
+    for (UIView *currentView in cell.subviews)
+    {
+        if([currentView isKindOfClass:[UIScrollView class]])
+        {
+            ((UIScrollView *)currentView).delaysContentTouches = NO;
+            break;
+        }
+    }
+    
+    return cell ;
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return kMethodCellH+0.5 ;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+    NSDictionary *dic =[methods objectAtIndex:indexPath.row];
+    NSString *url =[dic objectForKey:@"url"];
+    NSString *name =[dic objectForKey:@"title"];
+    [self.methodDelegate selectedMethodTableIndex:indexPath.row andUrl:url andName:name] ;
+}
+
+@end

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>A4F545DA-09C7-4A7A-9A2E-76DFED7FDF13</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LXWiFi</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7CC40BEA-786E-4E8E-AA6A-C471532ADA6E</key>
+		<string>http://10.1.1.14:83/wifi</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>LXWiFi.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0067BEF6-AE7D-4666-B3F4-A70DA6CBBB6F</key>
+		<string>../..</string>
+		<key>7CC40BEA-786E-4E8E-AA6A-C471532ADA6E</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://10.1.1.14:83/wifi/Code/IOS/LXWiFi/LXWiFi.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>0067BEF6-AE7D-4666-B3F4-A70DA6CBBB6F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7CC40BEA-786E-4E8E-AA6A-C471532ADA6E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LXWiFi</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0067BEF6-AE7D-4666-B3F4-A70DA6CBBB6F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LXWiFi</string>
+		</dict>
+	</array>
+</dict>
+</plist>

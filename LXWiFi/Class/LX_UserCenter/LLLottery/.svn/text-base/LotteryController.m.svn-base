@@ -1,0 +1,405 @@
+//
+//  LotteryController.m
+//  免费流量王
+//
+//  Created by keyrun on 14-10-24.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "LotteryController.h"
+#import "SectorView.h"
+#import "HeadToolBar.h"
+#import "MScrollVIew.h"
+#import "TaoJinButton.h"
+#import "TaoJinLabel.h"
+#import "SerialAnimationQueue.h"
+#import "UniversalTip.h"
+#import "LLAsynURLConnection.h"
+#import "SDImageView+SDWebCache.h"
+#import "LoadingView.h"
+#import "UIAlertView+NetPrompt.h"
+@interface LotteryController ()
+{
+    HeadToolBar *headBar ;
+    MScrollVIew *ms ;
+    SectorView *sectorView ;
+    UIImageView *lotteryPan;       //抽奖转盘
+    float origin ;                 //转盘开始的角度
+    BOOL isStop ;
+    UIImageView *flashImg  ;
+    int todayCount ;             //连续登陆
+    int missionCount;            // 完成任务
+    TaoJinLabel *textOne ;      //显示连续登陆
+    TaoJinLabel *textTwo ;      //显示完成任务
+    int failCount ;          //请求失败次数
+    NSArray *rewardsList;
+    int rewardID;
+    int index ;         //记录中的奖 是第几位
+    TaoJinLabel *rewardedTip;    //获奖提示
+    int rewardGold ;            //中奖金额
+    TaoJinButton *startBtn ;
+    UIImageView *lotteryImg;
+}
+@end
+
+@implementation LotteryController
+
+-(void)viewWillAppear:(BOOL)animated {
+    self.view.backgroundColor = kBlueTextColor ;
+}
+-(void) goBackToVC {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+
+    headBar = [[HeadToolBar alloc] initWithTitle:@"剩余抽奖次数" leftBtnTitle:@"返回" leftBtnImg:GetImage(@"back") leftBtnHighlightedImg:nil rightLabTitle:nil backgroundColor:kBlueTextColor];
+    [headBar.leftBtn addTarget:self action:@selector(goBackToVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:headBar];
+    
+    if (kDeviceVersion >= 7.0) {
+        ms = [[MScrollVIew alloc] initWithFrame:CGRectMake(0, headBar.frame.origin.y + headBar.frame.size.height, kmainScreenWidth, kmainScreenHeigh - headBar.frame.origin.y - headBar.frame.size.height ) andWithPageCount:1 backgroundImg:nil];
+    }else{
+        ms = [[MScrollVIew alloc] initWithFrame:CGRectMake(0, headBar.frame.origin.y + headBar.frame.size.height, kmainScreenWidth, kmainScreenHeigh - headBar.frame.origin.y - headBar.frame.size.height -20) andWithPageCount:1 backgroundImg:nil];
+    }
+    ms.showsVerticalScrollIndicator =NO;
+    [ms setContentSize:CGSizeMake(kmainScreenWidth, ms.frame.size.height+1)];
+    ms.bounces =YES;
+    ms.pagingEnabled =NO;
+    [self.view addSubview:ms];
+
+    
+    [self initLotteryContentView];
+    [self performSelector:@selector(requestForDailyLottery) onThread:[NSThread currentThread] withObject:nil waitUntilDone:NO];
+}
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+-(void)viewDidDisappear:(BOOL)animated{
+   if (kDeviceVersion >= 7.0) {
+        self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    }
+    [ms removeFromSuperview];
+    ms =nil;
+    [headBar removeFromSuperview];
+    headBar =nil;
+    [lotteryImg removeFromSuperview];
+    lotteryImg =nil;
+    [lotteryPan removeFromSuperview];
+    lotteryPan =nil;
+    [rewardedTip removeFromSuperview];
+    rewardedTip =nil;
+}
+-(void) initLotteryContentView{
+    UIImage *title = GetImageWithName(@"lotteryTitle");
+    float offx = 8.0f ;
+    UIImageView *titleImg = [self loadImageViewFrame:CGRectMake( kmainScreenWidth/2 -title.size.width/2, kOffX_2_0, title.size.width, title.size.height) andImage:title];
+    UIColor *cofferColor = ColorRGB(132.0, 69.0, 35.0, 1.0);
+    TaoJinLabel *labOne = [[TaoJinLabel alloc] initWithFrame:CGRectMake(offx + titleImg.frame.origin.x, titleImg.frame.size.height/2 -10.0f +titleImg.frame.origin.y, titleImg.frame.size.width/2, 14.0f) text:[NSString stringWithFormat:@"连续登陆"] font:GetFont(14.0f) textColor:cofferColor textAlignment:NSTextAlignmentLeft numberLines:1];
+    [labOne sizeToFit];
+    labOne.frame =CGRectMake(labOne.frame.origin.x, labOne.frame.origin.y, labOne.frame.size.width, labOne.frame.size.height);
+    
+    textOne = [[TaoJinLabel alloc] initWithFrame:CGRectMake( labOne.frame.origin.x +labOne.frame.size.width, labOne.frame.origin.y +1.0f, titleImg.frame.size.width /2-offx -labOne.frame.size.width, 15.0f) text:[NSString stringWithFormat:@"0"] font:GetBoldFont(14.0f) textColor:kWitheColor textAlignment:NSTextAlignmentCenter numberLines:1];
+//    textOne.backgroundColor =[UIColor redColor];
+    
+    TaoJinLabel *labTwo = [[TaoJinLabel alloc] initWithFrame:CGRectMake(offx+ titleImg.frame.origin.x +titleImg.frame.size.width/2, titleImg.frame.size.height/2 -10.0f +titleImg.frame.origin.y, titleImg.frame.size.width/2, 14.0f) text:@"完成任务" font:GetFont(14.0f) textColor:cofferColor textAlignment:NSTextAlignmentLeft numberLines:1];
+    [labTwo sizeToFit];
+    labTwo.frame =CGRectMake(labTwo.frame.origin.x, labTwo.frame.origin.y, labTwo.frame.size.width, labTwo.frame.size.height);
+    
+    textTwo = [[TaoJinLabel alloc] initWithFrame:CGRectMake(labTwo.frame.origin.x +labTwo.frame.size.width, labTwo.frame.origin.y +1.0f , titleImg.frame.size.width/2 -offx-labTwo.frame.size.width, 15.0f) text:[NSString stringWithFormat:@"0"] font:GetBoldFont(14.0f) textColor:kWitheColor textAlignment:NSTextAlignmentCenter numberLines:1];
+//    textTwo.backgroundColor =[UIColor redColor];
+    UIImage *lottery =GetImage(@"lotterybgdef");
+    lotteryImg = [self loadImageViewFrame:CGRectMake(kmainScreenWidth/2 -lottery.size.width/2, titleImg.frame.origin.y +titleImg.frame.size.height  +22.0f, lottery.size.width, lottery.size.height) andImage:lottery];
+    
+    UIImage *flash =GetImage(@"lotteryKuang");
+    flashImg = [self loadImageViewFrame:CGRectMake(kmainScreenWidth/2 -flash.size.width/2, lotteryImg.frame.origin.y, flash.size.width, flash.size.height) andImage:flash];
+    
+    UIImage *mark = GetImage(@"lotteryMark");
+    UIImageView *markImg = [self loadImageViewFrame:CGRectMake(kmainScreenWidth/2 -mark.size.width/2, lotteryImg.frame.origin.y +37.0f, mark.size.width, mark.size.height) andImage:mark];
+    
+    lotteryPan =[self loadImageViewFrame:CGRectMake(0, 0, 0, 0) andImage:nil];
+    UIImage *pan =GetImage(@"lotterypandef");
+    [lotteryPan setImage:pan];
+//    float panSize = 231.0f;
+    lotteryPan.frame =CGRectMake(kmainScreenWidth/2 -pan.size.width/2, markImg.frame.origin.y +30.0,pan.size.width, pan.size.height);
+
+    
+    UIImage *start = GetImage(@"startDef");
+    startBtn =[[TaoJinButton alloc] initWithFrame:CGRectMake(kmainScreenWidth/2 -start.size.width/2, lotteryPan.frame.origin.y, start.size.width, start.size.height) titleStr:nil titleColor:nil font:nil logoImg:nil backgroundImg:start];
+    startBtn.center = lotteryPan.center;
+    [startBtn setBackgroundImage:GetImage(@"startSel") forState:UIControlStateHighlighted];
+    [startBtn addTarget:self action:@selector(startLottery) forControlEvents:UIControlEventTouchUpInside];
+    
+    rewardedTip =[[TaoJinLabel alloc] initWithFrame:CGRectMake(0, lotteryImg.frame.origin.y +lotteryImg.frame.size.height -35.0f, kmainScreenWidth, 16.0f) text:@"祝君好运，恭喜发财" font:GetFont(16.0) textColor:ColorRGB(15.0, 106.0, 179.0, 1.0) textAlignment:NSTextAlignmentCenter numberLines:1];
+    
+//    [self loadLotteryTipWith:CGRectMake(kOffX_2_0, lotteryImg.frame.origin.y +lotteryImg.frame.size.height +15.0f,kmainScreenWidth -2*(kOffX_2_0), 0)];
+//    [ms setContentSize:CGSizeMake(kmainScreenWidth, rewardedTip.frame.origin.y +rewardedTip.frame.size.height )];
+    
+    [ms addSubview:titleImg];
+    [ms addSubview:labOne];
+    [ms addSubview:labTwo];
+    [ms addSubview:textOne];
+    [ms addSubview:textTwo];
+    [ms addSubview:lotteryImg];
+    [ms addSubview:flashImg];
+    [ms addSubview:lotteryPan];
+    [ms addSubview:markImg];
+    [ms addSubview:startBtn];
+    [ms addSubview:rewardedTip];
+    
+}
+-(void)loadLotteryTipWith:(CGRect) rect andContent:(NSString *)string{
+  /*
+    NSString *first =[NSString stringWithFormat:@"1.连续多日登陆可获得最高3次的抽奖机会;"];
+    NSString *second =[NSString stringWithFormat:@"2.可通过做任务获得更多抽奖机会（完成一个任务获得一次抽奖机会）;"];
+    NSString *thrid =[NSString stringWithFormat:@"3.请确保您的QQ号码是正确的，否则将无法兑换成功；"];
+    NSString *four =[NSString stringWithFormat:@"4.兑换后需1~2个工作日的审核时间，审核成功后会自动为您的QQ充值，请注意查收；"];
+    NSString *five =[NSString stringWithFormat:@"5.该奖品由91淘金提供，与苹果公司无关。"];
+    NSArray *arraytip =[NSArray arrayWithObjects:@"抽奖说明：",first,second,thrid,four, five,nil];
+//    UniversalTip *tip =[[UniversalTip alloc]initWithFrame:rect andTips:arraytip andTipBackgrundColor:KTipBackground2_0 withTipFont:[UIFont systemFontOfSize:11.0] andTipImage:GetImageWithName(@"") andTipTitle:@"" andTextColor:kWitheColor];
+//    [ms setContentSize:CGSizeMake(kmainScreenWidth, tip.frame.origin.y +tip.frame.size.height)];
+//    [ms addSubview:tip];
+   */
+    TaoJinLabel *labelTip =[[TaoJinLabel alloc] initWithFrame:rect text:string font:GetFont(11.0) textColor:kWitheColor textAlignment:NSTextAlignmentLeft numberLines:0];
+    [labelTip sizeToFit];
+    labelTip.frame =CGRectMake(rect.origin.x, rect.origin.y, labelTip.frame.size.width, labelTip.frame.size.height);
+    [ms addSubview:labelTip];
+    if (labelTip.frame.origin.y +labelTip.frame.size.height > self.view.frame.size.height -headBar.frame.origin.y -headBar.frame.size.height) {
+        [ms setContentSize:CGSizeMake(kmainScreenWidth, labelTip.frame.origin.y +labelTip.frame.size.height +30)];
+    }
+    
+}
+-(UIImageView *)loadImageViewFrame:(CGRect)frame andImage:(UIImage *)image{
+    UIImageView *img = [[UIImageView alloc] initWithImage:image];
+    img.frame = frame;
+    return img;
+}
+-(void) flashLottery{
+    flashImg.hidden = flashImg.hidden ==YES ? NO :YES;
+}
+-(void)stopAni{
+    CABasicAnimation *spin2 = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    int  random = arc4random() % 43;
+    [spin2 setToValue:[NSNumber numberWithFloat:M_PI *4*2  + -1*(M_PI/360*random +(index-1)*(M_PI/4))]];
+    [spin2 setDuration:2];
+    [spin2 setDelegate:self];
+    [spin2 setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+    [lotteryPan.layer addAnimation:spin2 forKey:@"stopAni"];
+     lotteryPan.transform =CGAffineTransformMakeRotation(M_PI *4*2  + -1*(M_PI/360*random +(index-1)*(M_PI/4)));
+    origin = -1*(M_PI/360*random +(index-1)*(M_PI/4)) ;
+
+    [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(stopedAnimation) userInfo:nil repeats:NO];
+}
+-(void)stopedAnimation{
+    startBtn.userInteractionEnabled = YES;
+    if (todayCount >0) {
+        textOne.text =[NSString stringWithFormat:@"%d",todayCount-1];
+        todayCount -=1;
+    }else if(missionCount >0){
+        textTwo.text =[NSString stringWithFormat:@"%d",todayCount-1];
+        missionCount -=1;
+    }
+    
+    rewardedTip.text =[NSString stringWithFormat:@"恭喜抽中 %d流量币",rewardGold];
+}
+-(void) startAnimation{
+    startBtn.userInteractionEnabled = NO;
+    
+    CABasicAnimation *spin = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    [spin setFromValue:[NSNumber numberWithFloat:origin]];
+    [spin setToValue:[NSNumber numberWithFloat:M_PI *2 *10 *2]];
+    [spin setDuration:10.0];
+    [spin setDelegate:self];
+    [spin setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [lotteryPan.layer addAnimation:spin forKey:@"startAni"];
+    
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex != 0) {
+        [self.navigationController popToRootViewControllerAnimated:NO];
+        [[NSNotificationCenter defaultCenter]postNotificationName:GoBackToFlowCenterNotic object:nil userInfo:nil];
+    }else if (alertView.tag == kTimeOutTag){
+        if(buttonIndex == 0){
+            [alertView dismissWithClickedButtonIndex:0 animated:YES];
+            [UIAlertView resetNetAlertNil];
+            [[LoadingView showLoadingView] actViewStartAnimation];
+            [self requestForDailyLottery];
+        }
+
+    }
+
+}
+/**
+*  请求获奖信息
+*/
+-(void)startLottery{
+    if (todayCount + missionCount >0) {
+        [self startAnimation];
+        index =0 ;
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(flashLottery) userInfo:nil repeats:YES];
+        NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"luckey/join"];
+        [LLAsynURLConnection requestForMethodGetWithURL:urlStr dataDic:nil andProtocolNum:@"50002" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+            NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSLog(@" 获取抽奖获奖信息 == %@ ",dataDic);
+            if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+                NSDictionary *body =[dataDic objectForKey:@"body"];
+                rewardID = [[body objectForKey:@"jid"] intValue];
+                rewardGold =[[body objectForKey:@"gold"] intValue];
+                for (NSDictionary *dic in rewardsList) {
+                    index ++;
+                    int dicId =[[dic objectForKey:@"id"] intValue];
+                    if (dicId == rewardID) {
+                        break ;
+                    }
+                }
+                dispatch_time_t poptime = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC *3);
+                dispatch_after(poptime, dispatch_get_main_queue(), ^{
+                    [lotteryPan.layer removeAnimationForKey:@"startAni"];
+                    [self performSelector:@selector(stopAni) withObject:nil afterDelay:0.0];
+                });
+                
+            }
+        } andFailBlock:^(NSError *error) {
+            
+        }];
+
+    }else{
+        UIAlertView *tipAlert =[[UIAlertView alloc] initWithTitle:@"免费抽奖次数已用完" message:@"做任务获取抽奖机会，做的越多奖励的抽奖机会越多；\n部分游戏/应用包含多个任务，可以获得多次抽奖机会；\n是否立即做任务获得抽奖机会？" delegate:self cancelButtonTitle:@"算了" otherButtonTitles:@"去做任务", nil];
+        [tipAlert show];
+        NSLog(@" 没有抽奖次数");
+    }
+    /*
+    srand((unsigned)time(0)) ;
+    
+    
+    CABasicAnimation *spin = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    [spin setFromValue:[NSNumber numberWithFloat:M_PI *(0.0 +origin)]];
+    [spin setToValue:[NSNumber numberWithFloat:M_PI *2 *10]];
+    [spin setDuration:10.0];
+//    [spin setRepeatCount:10];
+    [spin setDelegate:self];
+    [spin setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+//    [lotteryPan.layer addAnimation:spin forKey:@"startAni"];
+//    lotteryPan.transform =CGAffineTransformMakeRotation(M_PI *(10.0 +random +origin));
+    origin = (10.0 +origin);
+    
+    
+    void(^ isRecived)(int )=^(int i){
+        if (isRecived) {
+        
+        }
+        
+    };
+    
+    SerialAnimationQueue* queue =[[SerialAnimationQueue alloc] init];
+    __block BOOL isRecive = false;
+    __block float speedTime = 0.0f;             //动画运行时间
+    __block float speed = 0.0f;                 //速率
+    __block float localSpeed = -1.0f;
+    __block int rewardNum = -1;
+    void(^ startRotation)(int ,int) =^(int i ,int j){
+
+        [queue animateWithDurationBlock:0.01f delayBlock:^NSTimeInterval{
+            if(speedTime == 0.0f){
+                speedTime = 0.45f;
+            }
+            if (speed >- 0.4f && !isRecive) {
+                speed -= 0.08f;
+            }else if (speed <= 0.00001f && isRecive){
+                int count =0;
+                if (localSpeed == -1.0f) {
+                    
+                    count =  rewardNum +i%360;
+                    localSpeed =(-speed)/count;
+                    NSLog(@" loacal  === %f",localSpeed);
+                }
+                speed +=localSpeed;
+                NSLog(@" isrecive %d  %f ",count, speedTime+speed);
+                if (speed > 0.0001f) {
+                    dispatch_suspend(queue.queue);
+                }
+                
+            }
+            NSLog(@"speed %f time %f",speed,speedTime +speed);
+            return speedTime +speed;
+        } options:UIViewAnimationOptionLayoutSubviews animations:^{
+            
+            if (isRecive && speed >0.0001f) {
+                NSLog(@"  i===%d ",i);
+                lotteryPan.transform =CGAffineTransformMakeRotation(rewardNum * 1/4 *M_PI);
+            }else{
+            NSLog(@"rotation  %d ",j);
+                lotteryPan.transform = CGAffineTransformRotate(lotteryPan.transform, M_PI /360);
+
+            }
+        } completion:^(BOOL finished) {
+            
+        }];
+
+    };
+    
+    for (int i=0; i <1000; i++) {
+//        startRotation(0,i);
+        for (int j=0; j <360; j++) {
+//            startRotation(i,j);
+        }
+
+     }
+    */
+}
+/**
+*  请求抽奖基本信息
+*/
+-(void)requestForDailyLottery {
+    if (![[LoadingView showLoadingView] actViewIsAnimation]) {
+        [[LoadingView showLoadingView] actViewStartAnimation];
+    }
+    NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"luckey"];
+    NSLog(@" 请求抽奖基本信息 == %@",urlStr);
+    [LLAsynURLConnection requestForMethodGetWithURL:urlStr dataDic:nil andProtocolNum:@"50001" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+           NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+           NSLog(@" 获取每日抽奖基本信息 == %@ ",dataDic);
+           if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+               NSDictionary *body =[dataDic objectForKey:@"body"];
+               missionCount =[[body objectForKey:@"mission"] intValue];
+               todayCount = [[body objectForKey:@"today"] intValue];
+               rewardsList =[body objectForKey:@"lists"];
+               NSString *content =[body objectForKey:@"content"];
+               NSString *picUrl =[body objectForKey:@"pic"];
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   textOne.text = [NSString stringWithFormat:@"%d",todayCount] ;
+                   textTwo.text = [NSString stringWithFormat:@"%d",missionCount] ;
+                   [self loadLotteryTipWith:CGRectMake(kOffX_2_0, lotteryImg.frame.origin.y +lotteryImg.frame.size.height +15.0f,kmainScreenWidth -2*(kOffX_2_0), 0) andContent:content];
+                   [lotteryPan setImageWithURL:[NSURL URLWithString:picUrl] refreshCache:NO needSetViewContentMode:false needBgColor:false placeholderImage:GetImage(@"lotterypandef")];
+               });
+           }
+       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+        });
+    } andFailBlock:^(NSError *error) {
+        if(error.code == timeOutErrorCode){
+            if(failCount < 2){
+                failCount ++;
+                [self requestForDailyLottery];
+            }else{
+                [[LoadingView showLoadingView] actViewStopAnimation];
+                failCount = 0;
+                if(![UIAlertView isInit]){
+                    UIAlertView *alertView = [UIAlertView showNetAlert];
+                    alertView.tag = kTimeOutTag;
+                    alertView.delegate = self;
+                    [alertView show];
+                }
+            }
+        }
+    }];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

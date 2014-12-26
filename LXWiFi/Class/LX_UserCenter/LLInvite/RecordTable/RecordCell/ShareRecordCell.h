@@ -1,0 +1,40 @@
+//
+//  ShareRecordCell.h
+//  免费流量王
+//
+//  Created by keyrun on 14-10-15.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "TaoJinLabel.h"
+#import "TaoJinButton.h"
+#import "DashLine.h"
+typedef enum {
+    MissionStateNotComplete =0 ,       // 未完成
+    MissionStateDone ,                 // 已完成 未领取
+    MissionStateHaveReward             // 领取
+}MissionState;
+
+ typedef void(^ShareCellBlock)(NSString *number,int index,NSString *rewardNum);
+@interface ShareRecordCell : UITableViewCell
+{
+    ShareCellBlock _copyBlock;
+}
+@property (nonatomic ,strong) UIView *bottomLine ;
+@property (nonatomic ,strong) UIView *dashLine ;
+@property (nonatomic ,strong) TaoJinLabel *contentLab ;     //任务
+@property (nonatomic ,strong) TaoJinButton *doneBtn ;       // 完成按钮
+@property (nonatomic ,assign) MissionState missionState ;
+@property (nonatomic ,assign) int missionId;               //任务id
+
+
+@property (nonatomic ,strong) NSString *numString;
+@property (nonatomic ,assign) BOOL isLastOne ;
+@property (nonatomic ,assign) BOOL isFirstOne ;
+@property (nonatomic ,assign) int indexTag ;            //index 标签
+@property (nonatomic ,strong) NSString *invisiteNum;    //邀请数
+-(void) loadMissionCellViewWith:(NSString *)contentStr andMissionState:(MissionState )state rewardNum:(NSString* )number block:(ShareCellBlock)block;
+
+
+@end

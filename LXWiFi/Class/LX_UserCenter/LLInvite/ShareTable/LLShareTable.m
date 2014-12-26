@@ -1,0 +1,171 @@
+//
+//  LLShareTable.m
+//  免费流量王
+//
+//  Created by keyrun on 14-10-15.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "LLShareTable.h"
+#import "ShareTabCell.h"
+#import "LLAsynURLConnection.h"
+#import "ShareObj.h"
+#import "LoadingView.h"
+#import "UIAlertView+NetPrompt.h"
+@implementation LLShareTable
+{
+    NSMutableArray *titles ;
+    NSString *shareUrl ;
+    NSString *shareTitle;
+    NSString *codeUrl;
+    int failCount;
+}
+@synthesize haveRequest= _haveRequest ;
+-(instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
+    self = [super initWithFrame:frame style:style];
+    if (self) {
+        
+        self.separatorStyle = UITableViewCellSeparatorStyleNone ;
+        self.delegate =self;
+        self.dataSource =self;
+        self.delaysContentTouches =NO;
+    }
+    return self;
+}
+-(void) initBasicData{
+    failCount = 0;
+    titles = [[NSMutableArray alloc] init];
+    [self performSelector:@selector(requestForShareContent) onThread:[NSThread currentThread] withObject:nil waitUntilDone:NO];
+}
+/**
+*  请求分享内容
+*/
+-(void) requestForShareContent{
+    if (![[LoadingView showLoadingView] actViewIsAnimation]) {
+        [[LoadingView showLoadingView] actViewStartAnimation];
+    }
+    NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"share"];
+    [LLAsynURLConnection requestForMethodGetWithURL:urlStr dataDic:nil andProtocolNum:@"70001" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSLog(@" 获取分享数据 == %@",dataDic);
+            if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+                _haveRequest=YES;
+                NSDictionary *body =[dataDic objectForKey:@"body"];
+                titles =[body objectForKey:@"invite_list"];
+                codeUrl =[body objectForKey:@"url"];
+                shareTitle =[body objectForKey:@"wenan"];
+                shareUrl = [body objectForKey:@"url"];
+                NSDictionary *dic =@{@"code":codeUrl};
+                [[NSNotificationCenter defaultCenter]postNotificationName:GetCodeUrlNotic object:nil userInfo:dic];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self reloadData];
+                    [[LoadingView showLoadingView] actViewStopAnimation];
+                });
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[LoadingView showLoadingView] actViewStopAnimation];
+                });
+            }
+        });
+
+    } andFailBlock:^(NSError *error) {
+        _haveRequest =NO;
+        if(error.code == timeOutErrorCode){
+            if(failCount < 2){
+                failCount ++;
+                [self requestForShareContent];
+            }else{
+                [[LoadingView showLoadingView] actViewStopAnimation];
+                failCount = 0;
+                self.tableFooterView.hidden = YES;
+                if(![UIAlertView isInit]){
+                    UIAlertView *alertView = [UIAlertView showNetAlert];
+                    alertView.tag = kTimeOutTag;
+                    alertView.delegate = self;
+                    [alertView show];
+                }
+            }
+        }else{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+            self.tableFooterView.hidden = YES;
+        }
+        
+    }];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(alertView.tag == kTimeOutTag){
+        if(buttonIndex == 0){
+            [alertView dismissWithClickedButtonIndex:0 animated:YES];
+            [UIAlertView resetNetAlertNil];
+            [[LoadingView showLoadingView] actViewStartAnimation];
+            [self requestForShareContent];
+        }
+    }
+
+}
+-(NSMutableArray *) loadShareObjsWith:(NSArray *)array{
+    NSMutableArray *Marray =[[NSMutableArray alloc] init];
+    for (NSDictionary *dic in array) {
+        ShareObj *obj =[[ShareObj alloc] initShareObjWithDictionary:dic];
+//        NSLog(@" shareobj  ==%@ ",obj);
+        [Marray addObject:obj];
+    }
+    return Marray;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return titles.count+2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *string = @"cellID";
+    ShareTabCell *cell =[tableView dequeueReusableCellWithIdentifier:string];
+    if (!cell) {
+        cell = [[ShareTabCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:string];
+    }
+    if (indexPath.row == 0) {
+        cell.isHeadCell = YES;
+        [cell loadCellHeadVie:shareTitle];
+    }else if (indexPath.row == titles.count+1){
+        cell.isBottomCell = YES;
+        [cell loadCellBottomViewWithURL:shareUrl];
+    }
+    else {
+
+        NSDictionary *dic =[titles objectAtIndex:indexPath.row -1];
+        NSString *title =[dic objectForKey:@"name"];
+        NSString *content =[dic objectForKey:@"content"];
+        NSString *gold =[dic objectForKey:@"gold"];
+
+        [cell loadShareTabCellViewWithTitle:title Content:content rewardNum:gold];
+
+        
+    }
+    for (UIView *currentView in cell.subviews)
+    {
+        if([currentView isKindOfClass:[UIScrollView class]])
+        {
+            ((UIScrollView *)currentView).delaysContentTouches = NO;
+            break;
+        }
+    }
+    return cell ;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    ShareTabCell *cell = (ShareTabCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
+    if (indexPath.row ==1 ) {
+        return cell.content.frame.origin.y +cell.content.frame.size.height +15.0f;
+    }else if(indexPath.row ==0){
+        if (kDeviceVersion == 7.0) {     //iOS 7.0.6在此处对高度的计算有bug
+//            CGSize size =[shareTitle sizeWithFont:GetFont(14.0f) forWidth:kmainScreenWidth- 20.0f lineBreakMode:NSLineBreakByWordWrapping];
+//            NSLog(@"  returnHeight ==%f %f %d",[cell getShareCellHeigth],size.height,cell.content.text.length);
+            return (shareTitle.length /21 +1) *16 +35.0f;
+        }else{
+//             NSLog(@"  returnHeight ==%f ",cell.content.frame.origin.y +cell.content.frame.size.height +20.0f);
+            return  cell.content.frame.origin.y +cell.content.frame.size.height +20.0f;
+        }
+    }else{
+        return [cell getShareCellHeigth];
+    }
+}
+@end

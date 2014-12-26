@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket
+END
+GCDAsyncSocket.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/GCDAsyncSocket.h
+END
+GCDAsyncSocket.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/GCDAsyncSocket.m
+END
+TcpClient.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/TcpClient.h
+END
+GCDAsyncUdpSocket.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/GCDAsyncUdpSocket.h
+END
+TcpClient.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/TcpClient.m
+END
+ITcpClient.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/ITcpClient.h
+END
+GCDAsyncUdpSocket.m
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/Socket/GCDAsyncUdpSocket.m
+END

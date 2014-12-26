@@ -1,0 +1,744 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		399C031C19C7D631002B4252 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C031B19C7D631002B4252 /* Foundation.framework */; };
+		399C031E19C7D631002B4252 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C031D19C7D631002B4252 /* CoreGraphics.framework */; };
+		399C032019C7D631002B4252 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C031F19C7D631002B4252 /* UIKit.framework */; };
+		399C033519C7D631002B4252 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C033419C7D631002B4252 /* XCTest.framework */; };
+		399C033619C7D631002B4252 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C031B19C7D631002B4252 /* Foundation.framework */; };
+		399C033719C7D631002B4252 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C031F19C7D631002B4252 /* UIKit.framework */; };
+		399C033F19C7D631002B4252 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 399C033D19C7D631002B4252 /* InfoPlist.strings */; };
+		399C034119C7D631002B4252 /* LXWiFiTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C034019C7D631002B4252 /* LXWiFiTests.m */; };
+		399C035819C7D705002B4252 /* LXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C034E19C7D705002B4252 /* LXAppDelegate.m */; };
+		399C035919C7D705002B4252 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 399C035219C7D705002B4252 /* InfoPlist.strings */; };
+		399C035A19C7D705002B4252 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 399C035419C7D705002B4252 /* Images.xcassets */; };
+		399C035B19C7D705002B4252 /* 乐享WiFi-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 399C035519C7D705002B4252 /* 乐享WiFi-Info.plist */; };
+		399C035F19C7D8D3002B4252 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C035E19C7D8D3002B4252 /* main.m */; };
+		399C036B19C7DADF002B4252 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C036419C7DADF002B4252 /* Reachability.m */; };
+		399C036C19C7DADF002B4252 /* JSNsstring.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C036719C7DADF002B4252 /* JSNsstring.m */; };
+		399C036D19C7DADF002B4252 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 399C036A19C7DADF002B4252 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		399C03B219C7DAEE002B4252 /* libbaidumapapiall.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C03AD19C7DAEE002B4252 /* libbaidumapapiall.a */; };
+		399C03B319C7DAEE002B4252 /* libbaidumapapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 399C03AF19C7DAEE002B4252 /* libbaidumapapi.a */; };
+		399C03B419C7DAEE002B4252 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 399C03B019C7DAEE002B4252 /* mapapi.bundle */; };
+		399C03B519C7DAEE002B4252 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 399C03B119C7DAEE002B4252 /* readme.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		399C033819C7D631002B4252 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 399C031019C7D631002B4252 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 399C031719C7D631002B4252;
+			remoteInfo = LXWiFi;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		399C031819C7D631002B4252 /* 乐享WiFi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "乐享WiFi.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		399C031B19C7D631002B4252 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		399C031D19C7D631002B4252 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		399C031F19C7D631002B4252 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		399C033319C7D631002B4252 /* 乐享WiFiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "乐享WiFiTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		399C033419C7D631002B4252 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		399C033C19C7D631002B4252 /* 乐享WiFiTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "乐享WiFiTests-Info.plist"; sourceTree = "<group>"; };
+		399C033E19C7D631002B4252 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		399C034019C7D631002B4252 /* LXWiFiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LXWiFiTests.m; sourceTree = "<group>"; };
+		399C034D19C7D705002B4252 /* LXAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXAppDelegate.h; sourceTree = "<group>"; };
+		399C034E19C7D705002B4252 /* LXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXAppDelegate.m; sourceTree = "<group>"; };
+		399C035319C7D705002B4252 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		399C035419C7D705002B4252 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		399C035519C7D705002B4252 /* 乐享WiFi-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "乐享WiFi-Info.plist"; sourceTree = "<group>"; };
+		399C035D19C7D8D3002B4252 /* 乐享WiFi-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "乐享WiFi-Prefix.pch"; sourceTree = "<group>"; };
+		399C035E19C7D8D3002B4252 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		399C036019C7D9C0002B4252 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		399C036119C7D9C0002B4252 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		399C036319C7DADF002B4252 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		399C036419C7DADF002B4252 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		399C036619C7DADF002B4252 /* JSNsstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSNsstring.h; sourceTree = "<group>"; };
+		399C036719C7DADF002B4252 /* JSNsstring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSNsstring.m; sourceTree = "<group>"; };
+		399C036919C7DADF002B4252 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		399C036A19C7DADF002B4252 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		399C037019C7DAEE002B4252 /* BMapKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMapKit.h; sourceTree = "<group>"; };
+		399C037119C7DAEE002B4252 /* BMKActionPaopaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKActionPaopaoView.h; sourceTree = "<group>"; };
+		399C037219C7DAEE002B4252 /* BMKAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKAnnotation.h; sourceTree = "<group>"; };
+		399C037319C7DAEE002B4252 /* BMKAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKAnnotationView.h; sourceTree = "<group>"; };
+		399C037419C7DAEE002B4252 /* BMKArcline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKArcline.h; sourceTree = "<group>"; };
+		399C037519C7DAEE002B4252 /* BMKArclineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKArclineView.h; sourceTree = "<group>"; };
+		399C037619C7DAEE002B4252 /* BMKBaseComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKBaseComponent.h; sourceTree = "<group>"; };
+		399C037719C7DAEE002B4252 /* BMKBusLineSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKBusLineSearch.h; sourceTree = "<group>"; };
+		399C037819C7DAEE002B4252 /* BMKBusLineSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKBusLineSearchOption.h; sourceTree = "<group>"; };
+		399C037919C7DAEE002B4252 /* BMKCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCircle.h; sourceTree = "<group>"; };
+		399C037A19C7DAEE002B4252 /* BMKCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCircleView.h; sourceTree = "<group>"; };
+		399C037B19C7DAEE002B4252 /* BMKCloudPOIList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCloudPOIList.h; sourceTree = "<group>"; };
+		399C037C19C7DAEE002B4252 /* BMKCloudSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCloudSearch.h; sourceTree = "<group>"; };
+		399C037D19C7DAEE002B4252 /* BMKCloudSearchComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCloudSearchComponent.h; sourceTree = "<group>"; };
+		399C037E19C7DAEE002B4252 /* BMKCloudSearchInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKCloudSearchInfo.h; sourceTree = "<group>"; };
+		399C037F19C7DAEE002B4252 /* BMKGeneralDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGeneralDelegate.h; sourceTree = "<group>"; };
+		399C038019C7DAEE002B4252 /* BMKGeocodeSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGeocodeSearch.h; sourceTree = "<group>"; };
+		399C038119C7DAEE002B4252 /* BMKGeocodeSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGeocodeSearchOption.h; sourceTree = "<group>"; };
+		399C038219C7DAEE002B4252 /* BMKGeocodeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGeocodeType.h; sourceTree = "<group>"; };
+		399C038319C7DAEE002B4252 /* BMKGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGeometry.h; sourceTree = "<group>"; };
+		399C038419C7DAEE002B4252 /* BMKGroundOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGroundOverlay.h; sourceTree = "<group>"; };
+		399C038519C7DAEE002B4252 /* BMKGroundOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKGroundOverlayView.h; sourceTree = "<group>"; };
+		399C038619C7DAEE002B4252 /* BMKLocationComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKLocationComponent.h; sourceTree = "<group>"; };
+		399C038719C7DAEE002B4252 /* BMKLocationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKLocationService.h; sourceTree = "<group>"; };
+		399C038819C7DAEE002B4252 /* BMKLocationViewDisplayParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKLocationViewDisplayParam.h; sourceTree = "<group>"; };
+		399C038919C7DAEE002B4252 /* BMKMapComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKMapComponent.h; sourceTree = "<group>"; };
+		399C038A19C7DAEE002B4252 /* BMKMapManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKMapManager.h; sourceTree = "<group>"; };
+		399C038B19C7DAEE002B4252 /* BMKMapStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKMapStatus.h; sourceTree = "<group>"; };
+		399C038C19C7DAEE002B4252 /* BMKMapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKMapView.h; sourceTree = "<group>"; };
+		399C038D19C7DAEE002B4252 /* BMKMultiPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKMultiPoint.h; sourceTree = "<group>"; };
+		399C038E19C7DAEE002B4252 /* BMKNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKNavigation.h; sourceTree = "<group>"; };
+		399C038F19C7DAEE002B4252 /* BMKOfflineMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOfflineMap.h; sourceTree = "<group>"; };
+		399C039019C7DAEE002B4252 /* BMKOfflineMapType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOfflineMapType.h; sourceTree = "<group>"; };
+		399C039119C7DAEE002B4252 /* BMKOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOverlay.h; sourceTree = "<group>"; };
+		399C039219C7DAEE002B4252 /* BMKOverlayGLBasicView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOverlayGLBasicView.h; sourceTree = "<group>"; };
+		399C039319C7DAEE002B4252 /* BMKOverlayPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOverlayPathView.h; sourceTree = "<group>"; };
+		399C039419C7DAEE002B4252 /* BMKOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKOverlayView.h; sourceTree = "<group>"; };
+		399C039519C7DAEE002B4252 /* BMKPinAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPinAnnotationView.h; sourceTree = "<group>"; };
+		399C039619C7DAEE002B4252 /* BMKPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPointAnnotation.h; sourceTree = "<group>"; };
+		399C039719C7DAEE002B4252 /* BMKPoiSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPoiSearch.h; sourceTree = "<group>"; };
+		399C039819C7DAEE002B4252 /* BMKPoiSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPoiSearchOption.h; sourceTree = "<group>"; };
+		399C039919C7DAEE002B4252 /* BMKPoiSearchType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPoiSearchType.h; sourceTree = "<group>"; };
+		399C039A19C7DAEE002B4252 /* BMKPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPolygon.h; sourceTree = "<group>"; };
+		399C039B19C7DAEE002B4252 /* BMKPolygonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPolygonView.h; sourceTree = "<group>"; };
+		399C039C19C7DAEE002B4252 /* BMKPolyline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPolyline.h; sourceTree = "<group>"; };
+		399C039D19C7DAEE002B4252 /* BMKPolylineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKPolylineView.h; sourceTree = "<group>"; };
+		399C039E19C7DAEE002B4252 /* BMKRouteSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKRouteSearch.h; sourceTree = "<group>"; };
+		399C039F19C7DAEE002B4252 /* BMKRouteSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKRouteSearchOption.h; sourceTree = "<group>"; };
+		399C03A019C7DAEE002B4252 /* BMKRouteSearchType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKRouteSearchType.h; sourceTree = "<group>"; };
+		399C03A119C7DAEE002B4252 /* BMKSearchComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKSearchComponent.h; sourceTree = "<group>"; };
+		399C03A219C7DAEE002B4252 /* BMKShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKShape.h; sourceTree = "<group>"; };
+		399C03A319C7DAEE002B4252 /* BMKShareURLSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKShareURLSearch.h; sourceTree = "<group>"; };
+		399C03A419C7DAEE002B4252 /* BMKShareUrlSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKShareUrlSearchOption.h; sourceTree = "<group>"; };
+		399C03A519C7DAEE002B4252 /* BMKSuggestionSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKSuggestionSearch.h; sourceTree = "<group>"; };
+		399C03A619C7DAEE002B4252 /* BMKSuggestionSearchOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKSuggestionSearchOption.h; sourceTree = "<group>"; };
+		399C03A719C7DAEE002B4252 /* BMKTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKTypes.h; sourceTree = "<group>"; };
+		399C03A819C7DAEE002B4252 /* BMKUserLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKUserLocation.h; sourceTree = "<group>"; };
+		399C03A919C7DAEE002B4252 /* BMKUtilsComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKUtilsComponent.h; sourceTree = "<group>"; };
+		399C03AA19C7DAEE002B4252 /* BMKVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKVersion.h; sourceTree = "<group>"; };
+		399C03AD19C7DAEE002B4252 /* libbaidumapapiall.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbaidumapapiall.a; sourceTree = "<group>"; };
+		399C03AF19C7DAEE002B4252 /* libbaidumapapi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbaidumapapi.a; sourceTree = "<group>"; };
+		399C03B019C7DAEE002B4252 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = mapapi.bundle; sourceTree = "<group>"; };
+		399C03B119C7DAEE002B4252 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		399C03B619C7DC0C002B4252 /* AppMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacro.h; sourceTree = "<group>"; };
+		399C03B719C7DC3F002B4252 /* NotificationMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationMacro.h; sourceTree = "<group>"; };
+		399C03B819C7DC56002B4252 /* UtilsMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilsMacro.h; sourceTree = "<group>"; };
+		399C03B919C7DC6C002B4252 /* VendorMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VendorMacro.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		399C031519C7D631002B4252 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C031E19C7D631002B4252 /* CoreGraphics.framework in Frameworks */,
+				399C032019C7D631002B4252 /* UIKit.framework in Frameworks */,
+				399C03B319C7DAEE002B4252 /* libbaidumapapi.a in Frameworks */,
+				399C031C19C7D631002B4252 /* Foundation.framework in Frameworks */,
+				399C03B219C7DAEE002B4252 /* libbaidumapapiall.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		399C033019C7D631002B4252 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C033519C7D631002B4252 /* XCTest.framework in Frameworks */,
+				399C033719C7D631002B4252 /* UIKit.framework in Frameworks */,
+				399C033619C7D631002B4252 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		399C030F19C7D631002B4252 = {
+			isa = PBXGroup;
+			children = (
+				399C032119C7D631002B4252 /* LXWiFi */,
+				399C033A19C7D631002B4252 /* LXWiFiTests */,
+				399C031A19C7D631002B4252 /* Frameworks */,
+				399C031919C7D631002B4252 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		399C031919C7D631002B4252 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				399C031819C7D631002B4252 /* 乐享WiFi.app */,
+				399C033319C7D631002B4252 /* 乐享WiFiTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		399C031A19C7D631002B4252 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				399C031B19C7D631002B4252 /* Foundation.framework */,
+				399C031D19C7D631002B4252 /* CoreGraphics.framework */,
+				399C031F19C7D631002B4252 /* UIKit.framework */,
+				399C033419C7D631002B4252 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		399C032119C7D631002B4252 /* LXWiFi */ = {
+			isa = PBXGroup;
+			children = (
+				399C034A19C7D705002B4252 /* Class */,
+				399C035019C7D705002B4252 /* Extension */,
+				399C035119C7D705002B4252 /* Resource */,
+				399C032219C7D631002B4252 /* Supporting Files */,
+			);
+			path = LXWiFi;
+			sourceTree = "<group>";
+		};
+		399C032219C7D631002B4252 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		399C033A19C7D631002B4252 /* LXWiFiTests */ = {
+			isa = PBXGroup;
+			children = (
+				399C034019C7D631002B4252 /* LXWiFiTests.m */,
+				399C033B19C7D631002B4252 /* Supporting Files */,
+			);
+			path = LXWiFiTests;
+			sourceTree = "<group>";
+		};
+		399C033B19C7D631002B4252 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				399C033C19C7D631002B4252 /* 乐享WiFiTests-Info.plist */,
+				399C033D19C7D631002B4252 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		399C034A19C7D705002B4252 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				399C034B19C7D705002B4252 /* LX_Config */,
+				399C034C19C7D705002B4252 /* LX_System */,
+				399C034F19C7D705002B4252 /* LX_Utilities */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		399C034B19C7D705002B4252 /* LX_Config */ = {
+			isa = PBXGroup;
+			children = (
+				399C03B619C7DC0C002B4252 /* AppMacro.h */,
+				399C03B719C7DC3F002B4252 /* NotificationMacro.h */,
+				399C03B819C7DC56002B4252 /* UtilsMacro.h */,
+				399C03B919C7DC6C002B4252 /* VendorMacro.h */,
+			);
+			path = LX_Config;
+			sourceTree = "<group>";
+		};
+		399C034C19C7D705002B4252 /* LX_System */ = {
+			isa = PBXGroup;
+			children = (
+				399C034D19C7D705002B4252 /* LXAppDelegate.h */,
+				399C034E19C7D705002B4252 /* LXAppDelegate.m */,
+				399C035D19C7D8D3002B4252 /* 乐享WiFi-Prefix.pch */,
+				399C035E19C7D8D3002B4252 /* main.m */,
+			);
+			path = LX_System;
+			sourceTree = "<group>";
+		};
+		399C034F19C7D705002B4252 /* LX_Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				399C036219C7DADF002B4252 /* Reachability */,
+				399C036519C7DADF002B4252 /* JSNsstring */,
+				399C036819C7DADF002B4252 /* JSONKit */,
+			);
+			path = LX_Utilities;
+			sourceTree = "<group>";
+		};
+		399C035019C7D705002B4252 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				399C036E19C7DAEE002B4252 /* BaiDuMap */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		399C035119C7D705002B4252 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				399C035519C7D705002B4252 /* 乐享WiFi-Info.plist */,
+				399C035219C7D705002B4252 /* InfoPlist.strings */,
+				399C035419C7D705002B4252 /* Images.xcassets */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		399C036219C7DADF002B4252 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				399C036319C7DADF002B4252 /* Reachability.h */,
+				399C036419C7DADF002B4252 /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
+		399C036519C7DADF002B4252 /* JSNsstring */ = {
+			isa = PBXGroup;
+			children = (
+				399C036619C7DADF002B4252 /* JSNsstring.h */,
+				399C036719C7DADF002B4252 /* JSNsstring.m */,
+			);
+			path = JSNsstring;
+			sourceTree = "<group>";
+		};
+		399C036819C7DADF002B4252 /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				399C036919C7DADF002B4252 /* JSONKit.h */,
+				399C036A19C7DADF002B4252 /* JSONKit.m */,
+			);
+			path = JSONKit;
+			sourceTree = "<group>";
+		};
+		399C036E19C7DAEE002B4252 /* BaiDuMap */ = {
+			isa = PBXGroup;
+			children = (
+				399C036F19C7DAEE002B4252 /* inc */,
+				399C03AB19C7DAEE002B4252 /* libs */,
+				399C03B019C7DAEE002B4252 /* mapapi.bundle */,
+				399C03B119C7DAEE002B4252 /* readme.txt */,
+			);
+			path = BaiDuMap;
+			sourceTree = "<group>";
+		};
+		399C036F19C7DAEE002B4252 /* inc */ = {
+			isa = PBXGroup;
+			children = (
+				399C037019C7DAEE002B4252 /* BMapKit.h */,
+				399C037119C7DAEE002B4252 /* BMKActionPaopaoView.h */,
+				399C037219C7DAEE002B4252 /* BMKAnnotation.h */,
+				399C037319C7DAEE002B4252 /* BMKAnnotationView.h */,
+				399C037419C7DAEE002B4252 /* BMKArcline.h */,
+				399C037519C7DAEE002B4252 /* BMKArclineView.h */,
+				399C037619C7DAEE002B4252 /* BMKBaseComponent.h */,
+				399C037719C7DAEE002B4252 /* BMKBusLineSearch.h */,
+				399C037819C7DAEE002B4252 /* BMKBusLineSearchOption.h */,
+				399C037919C7DAEE002B4252 /* BMKCircle.h */,
+				399C037A19C7DAEE002B4252 /* BMKCircleView.h */,
+				399C037B19C7DAEE002B4252 /* BMKCloudPOIList.h */,
+				399C037C19C7DAEE002B4252 /* BMKCloudSearch.h */,
+				399C037D19C7DAEE002B4252 /* BMKCloudSearchComponent.h */,
+				399C037E19C7DAEE002B4252 /* BMKCloudSearchInfo.h */,
+				399C037F19C7DAEE002B4252 /* BMKGeneralDelegate.h */,
+				399C038019C7DAEE002B4252 /* BMKGeocodeSearch.h */,
+				399C038119C7DAEE002B4252 /* BMKGeocodeSearchOption.h */,
+				399C038219C7DAEE002B4252 /* BMKGeocodeType.h */,
+				399C038319C7DAEE002B4252 /* BMKGeometry.h */,
+				399C038419C7DAEE002B4252 /* BMKGroundOverlay.h */,
+				399C038519C7DAEE002B4252 /* BMKGroundOverlayView.h */,
+				399C038619C7DAEE002B4252 /* BMKLocationComponent.h */,
+				399C038719C7DAEE002B4252 /* BMKLocationService.h */,
+				399C038819C7DAEE002B4252 /* BMKLocationViewDisplayParam.h */,
+				399C038919C7DAEE002B4252 /* BMKMapComponent.h */,
+				399C038A19C7DAEE002B4252 /* BMKMapManager.h */,
+				399C038B19C7DAEE002B4252 /* BMKMapStatus.h */,
+				399C038C19C7DAEE002B4252 /* BMKMapView.h */,
+				399C038D19C7DAEE002B4252 /* BMKMultiPoint.h */,
+				399C038E19C7DAEE002B4252 /* BMKNavigation.h */,
+				399C038F19C7DAEE002B4252 /* BMKOfflineMap.h */,
+				399C039019C7DAEE002B4252 /* BMKOfflineMapType.h */,
+				399C039119C7DAEE002B4252 /* BMKOverlay.h */,
+				399C039219C7DAEE002B4252 /* BMKOverlayGLBasicView.h */,
+				399C039319C7DAEE002B4252 /* BMKOverlayPathView.h */,
+				399C039419C7DAEE002B4252 /* BMKOverlayView.h */,
+				399C039519C7DAEE002B4252 /* BMKPinAnnotationView.h */,
+				399C039619C7DAEE002B4252 /* BMKPointAnnotation.h */,
+				399C039719C7DAEE002B4252 /* BMKPoiSearch.h */,
+				399C039819C7DAEE002B4252 /* BMKPoiSearchOption.h */,
+				399C039919C7DAEE002B4252 /* BMKPoiSearchType.h */,
+				399C039A19C7DAEE002B4252 /* BMKPolygon.h */,
+				399C039B19C7DAEE002B4252 /* BMKPolygonView.h */,
+				399C039C19C7DAEE002B4252 /* BMKPolyline.h */,
+				399C039D19C7DAEE002B4252 /* BMKPolylineView.h */,
+				399C039E19C7DAEE002B4252 /* BMKRouteSearch.h */,
+				399C039F19C7DAEE002B4252 /* BMKRouteSearchOption.h */,
+				399C03A019C7DAEE002B4252 /* BMKRouteSearchType.h */,
+				399C03A119C7DAEE002B4252 /* BMKSearchComponent.h */,
+				399C03A219C7DAEE002B4252 /* BMKShape.h */,
+				399C03A319C7DAEE002B4252 /* BMKShareURLSearch.h */,
+				399C03A419C7DAEE002B4252 /* BMKShareUrlSearchOption.h */,
+				399C03A519C7DAEE002B4252 /* BMKSuggestionSearch.h */,
+				399C03A619C7DAEE002B4252 /* BMKSuggestionSearchOption.h */,
+				399C03A719C7DAEE002B4252 /* BMKTypes.h */,
+				399C03A819C7DAEE002B4252 /* BMKUserLocation.h */,
+				399C03A919C7DAEE002B4252 /* BMKUtilsComponent.h */,
+				399C03AA19C7DAEE002B4252 /* BMKVersion.h */,
+			);
+			path = inc;
+			sourceTree = "<group>";
+		};
+		399C03AB19C7DAEE002B4252 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				399C03AC19C7DAEE002B4252 /* Release-iphoneos */,
+				399C03AE19C7DAEE002B4252 /* Release-iphonesimulator */,
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		399C03AC19C7DAEE002B4252 /* Release-iphoneos */ = {
+			isa = PBXGroup;
+			children = (
+				399C03AD19C7DAEE002B4252 /* libbaidumapapiall.a */,
+			);
+			path = "Release-iphoneos";
+			sourceTree = "<group>";
+		};
+		399C03AE19C7DAEE002B4252 /* Release-iphonesimulator */ = {
+			isa = PBXGroup;
+			children = (
+				399C03AF19C7DAEE002B4252 /* libbaidumapapi.a */,
+			);
+			path = "Release-iphonesimulator";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		399C031719C7D631002B4252 /* 乐享WiFi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 399C034419C7D631002B4252 /* Build configuration list for PBXNativeTarget "乐享WiFi" */;
+			buildPhases = (
+				399C031419C7D631002B4252 /* Sources */,
+				399C031519C7D631002B4252 /* Frameworks */,
+				399C031619C7D631002B4252 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "乐享WiFi";
+			productName = LXWiFi;
+			productReference = 399C031819C7D631002B4252 /* 乐享WiFi.app */;
+			productType = "com.apple.product-type.application";
+		};
+		399C033219C7D631002B4252 /* 乐享WiFiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 399C034719C7D631002B4252 /* Build configuration list for PBXNativeTarget "乐享WiFiTests" */;
+			buildPhases = (
+				399C032F19C7D631002B4252 /* Sources */,
+				399C033019C7D631002B4252 /* Frameworks */,
+				399C033119C7D631002B4252 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				399C033919C7D631002B4252 /* PBXTargetDependency */,
+			);
+			name = "乐享WiFiTests";
+			productName = LXWiFiTests;
+			productReference = 399C033319C7D631002B4252 /* 乐享WiFiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		399C031019C7D631002B4252 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = LX;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = keyrun;
+				TargetAttributes = {
+					399C033219C7D631002B4252 = {
+						TestTargetID = 399C031719C7D631002B4252;
+					};
+				};
+			};
+			buildConfigurationList = 399C031319C7D631002B4252 /* Build configuration list for PBXProject "乐享WiFi" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				"zh-Hans",
+			);
+			mainGroup = 399C030F19C7D631002B4252;
+			productRefGroup = 399C031919C7D631002B4252 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				399C031719C7D631002B4252 /* 乐享WiFi */,
+				399C033219C7D631002B4252 /* 乐享WiFiTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		399C031619C7D631002B4252 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C03B519C7DAEE002B4252 /* readme.txt in Resources */,
+				399C035B19C7D705002B4252 /* 乐享WiFi-Info.plist in Resources */,
+				399C03B419C7DAEE002B4252 /* mapapi.bundle in Resources */,
+				399C035919C7D705002B4252 /* InfoPlist.strings in Resources */,
+				399C035A19C7D705002B4252 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		399C033119C7D631002B4252 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C033F19C7D631002B4252 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		399C031419C7D631002B4252 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C036C19C7DADF002B4252 /* JSNsstring.m in Sources */,
+				399C035F19C7D8D3002B4252 /* main.m in Sources */,
+				399C036B19C7DADF002B4252 /* Reachability.m in Sources */,
+				399C035819C7D705002B4252 /* LXAppDelegate.m in Sources */,
+				399C036D19C7DADF002B4252 /* JSONKit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		399C032F19C7D631002B4252 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				399C034119C7D631002B4252 /* LXWiFiTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		399C033919C7D631002B4252 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 399C031719C7D631002B4252 /* 乐享WiFi */;
+			targetProxy = 399C033819C7D631002B4252 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		399C033D19C7D631002B4252 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				399C033E19C7D631002B4252 /* en */,
+				399C036119C7D9C0002B4252 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		399C035219C7D705002B4252 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				399C035319C7D705002B4252 /* en */,
+				399C036019C7D9C0002B4252 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		399C034219C7D631002B4252 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		399C034319C7D631002B4252 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		399C034519C7D631002B4252 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LXWiFi/Class/LX_System/乐享WiFi-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/LXWiFi/Resource/乐享WiFi-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LXWiFi/Extension/BaiDuMap/libs/Release-iphoneos",
+					"$(PROJECT_DIR)/LXWiFi/Extension/BaiDuMap/libs/Release-iphonesimulator",
+				);
+				PRODUCT_NAME = "乐享WiFi";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		399C034619C7D631002B4252 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LXWiFi/Class/LX_System/乐享WiFi-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/LXWiFi/Resource/乐享WiFi-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LXWiFi/Extension/BaiDuMap/libs/Release-iphoneos",
+					"$(PROJECT_DIR)/LXWiFi/Extension/BaiDuMap/libs/Release-iphonesimulator",
+				);
+				PRODUCT_NAME = "乐享WiFi";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		399C034819C7D631002B4252 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LXWiFi.app/LXWiFi";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LXWiFi/LXWiFi-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LXWiFiTests/乐享WiFiTests-Info.plist";
+				PRODUCT_NAME = "乐享WiFiTests";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		399C034919C7D631002B4252 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/LXWiFi.app/LXWiFi";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LXWiFi/LXWiFi-Prefix.pch";
+				INFOPLIST_FILE = "LXWiFiTests/乐享WiFiTests-Info.plist";
+				PRODUCT_NAME = "乐享WiFiTests";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		399C031319C7D631002B4252 /* Build configuration list for PBXProject "乐享WiFi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				399C034219C7D631002B4252 /* Debug */,
+				399C034319C7D631002B4252 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		399C034419C7D631002B4252 /* Build configuration list for PBXNativeTarget "乐享WiFi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				399C034519C7D631002B4252 /* Debug */,
+				399C034619C7D631002B4252 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		399C034719C7D631002B4252 /* Build configuration list for PBXNativeTarget "乐享WiFiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				399C034819C7D631002B4252 /* Debug */,
+				399C034919C7D631002B4252 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 399C031019C7D631002B4252 /* Project object */;
+}

@@ -1,0 +1,19 @@
+//
+//  ShareMethodCell.h
+//  免费流量王
+//
+//  Created by keyrun on 14-10-16.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "TaoJinLabel.h"
+@interface ShareMethodCell : UITableViewCell
+
+@property (nonatomic ,strong) TaoJinLabel *mTitle ;
+@property (nonatomic ,strong) TaoJinLabel *mContent ;
+
+@property (nonatomic ,strong) UIImageView *arrowImg ;
+
+-(void)loadMethodCellWith:(NSString *)title andContent:(NSString *)content ;
+@end

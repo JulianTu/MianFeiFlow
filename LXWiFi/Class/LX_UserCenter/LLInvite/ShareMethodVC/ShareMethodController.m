@@ -1,0 +1,104 @@
+//
+//  ShareMethodController.m
+//  免费流量王
+//
+//  Created by keyrun on 14-10-25.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "ShareMethodController.h"
+#import "HeadToolBar.h"
+#import "UnderLineLabel.h"
+#import "LoadingView.h"
+@interface ShareMethodController ()
+{
+    HeadToolBar *headBar ;
+    UIWebView *pageWebView ;
+    int webFailedCount ;
+    UnderLineLabel *refreshWebLab;
+}
+@end
+
+@implementation ShareMethodController
+-(void) goBackToTop {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = kWitheColor ;
+//    self.methodUrl = @"http://www.baidu.com/";
+    headBar =[[HeadToolBar alloc] initWithTitle:self.Title leftBtnTitle:@"返回" leftBtnImg:GetImageWithName(@"back") leftBtnHighlightedImg:nil rightLabTitle:nil backgroundColor:kBlueTextColor];
+    [headBar.leftBtn addTarget:self action:@selector(goBackToTop) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:headBar];
+    
+    [self initWebView];
+}
+-(void) initWebView {
+
+    pageWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, headBar.frame.origin.y +headBar.frame.size.height, kmainScreenWidth, CGRectGetHeight(self.view.frame)-headBar.frame.origin.y -headBar.frame.size.height) ];
+    NSURLRequest *request =[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.methodUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10.0];
+    [pageWebView loadRequest:request];
+    pageWebView.delegate = self;
+    pageWebView.scalesPageToFit = NO;
+    pageWebView.userInteractionEnabled =YES;
+    pageWebView.autoresizingMask=UIViewAutoresizingFlexibleHeight;
+    
+    
+    refreshWebLab =[[UnderLineLabel alloc] initWithFrame:CGRectMake(0, 0, kmainScreenWidth, 15.0)];
+    refreshWebLab.font = GetFont(12.0f);
+    refreshWebLab.textColor = ColorRGB(155.0, 155.0, 155.0, 1) ;
+    refreshWebLab.highlightedColor = ColorRGB(230, 230, 230, 1) ;
+    refreshWebLab.shouldUnderline = YES;
+    [refreshWebLab setText:@"点击刷新" andCenter:CGPointMake(kmainScreenWidth/2, 30)];
+    [refreshWebLab sizeToFit];
+    refreshWebLab.frame =CGRectMake( kmainScreenWidth/2 -refreshWebLab.frame.size.width/2, pageWebView.frame.size.height/2- 7.0f, refreshWebLab.frame.size.width, refreshWebLab.frame.size.height);
+    [refreshWebLab addTarget:self action:@selector(refreshWebView)];
+    refreshWebLab.hidden =YES;
+    [pageWebView addSubview:refreshWebLab];
+    
+    
+    [self.view addSubview:pageWebView];
+}
+-(void)refreshWebView{
+    NSURLRequest *request =[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:self.methodUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10.0];
+    [pageWebView loadRequest:request];
+}
+-(void)webViewDidFinishLoad:(UIWebView *)webView{
+    refreshWebLab.hidden =YES;
+    [[LoadingView showLoadingView] actViewStopAnimation];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [[LoadingView showLoadingView] actViewStopAnimation];
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    
+    [headBar removeFromSuperview];
+    headBar =nil;
+    [pageWebView removeFromSuperview];
+    pageWebView =nil;
+}
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+//    if (webFailedCount < 5) {
+//        webFailedCount ++ ;
+//        NSURL *url = [NSURL URLWithString:self.methodUrl];
+//        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:url];
+//        [pageWebView loadRequest:request];
+//    }
+    refreshWebLab.hidden =NO;
+
+    [[LoadingView showLoadingView] actViewStopAnimation];
+}
+-(void)webViewDidStartLoad:(UIWebView *)webView{
+    refreshWebLab.hidden =YES;
+
+    [[LoadingView showLoadingView] actViewStartAnimation];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

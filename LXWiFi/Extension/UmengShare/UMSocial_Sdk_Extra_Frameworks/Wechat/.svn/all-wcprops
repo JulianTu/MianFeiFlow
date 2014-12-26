@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat
+END
+WXApiObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat/WXApiObject.h
+END
+libWeChatSDK.a
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat/libWeChatSDK.a
+END
+WXApi.h
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat/WXApi.h
+END
+UMSocialWechatHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat/UMSocialWechatHandler.h
+END
+libSocialWechat.a
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/UmengShare/UMSocial_Sdk_Extra_Frameworks/Wechat/libSocialWechat.a
+END

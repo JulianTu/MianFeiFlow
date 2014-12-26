@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers
+END
+AppConnectConstants.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/AppConnectConstants.h
+END
+WPCallsWrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPCallsWrapper.h
+END
+WPUserPoints.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPUserPoints.h
+END
+WPListCustom.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPListCustom.h
+END
+AppConnect.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/AppConnect.h
+END
+WPAdViewHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPAdViewHandler.h
+END
+WPRemotePush.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPRemotePush.h
+END
+WPConfuse.h
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPConfuse.h
+END
+WPFetchResponseProtocol.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPFetchResponseProtocol.h
+END
+WPLog.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPLog.h
+END
+WPPopViewHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPPopViewHandler.h
+END
+WPListViewHandler.h
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPListViewHandler.h
+END
+WPTBXML.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPTBXML.h
+END
+WPPointsManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/wifi/!svn/ver/350/Code/IOS/LXWiFi/LXWiFi/Extension/JFQ/WPLib.framework/Headers/WPPointsManager.h
+END

@@ -1,0 +1,134 @@
+//
+//  LLAsynURLConnection.m
+//  免费流量王
+//
+//  Created by keyrun on 14-11-4.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "LLAsynURLConnection.h"
+#import "JSNsstring.h"
+#import "JSONKit.h"
+#import "MyUserDefault.h"
+@implementation LLAsynURLConnection
+
++(id)requestURLWith:(NSString *)urlStr dataDic:(NSDictionary *)dic andProtocolNum:(NSString *)num andTimeOut:(int)time connectSuccess:(AsySuccess)success andFail:(AsyFail)fail{
+    LLAsynURLConnection *obj =[[self alloc]initWithURL:urlStr dataDic:dic andNum:num timeOut:time success:success fail:fail];
+    return obj;
+}
++(id)requestForMethodGetWithURL:(NSString *)urlStr dataDic:(NSDictionary *)dic andProtocolNum:(NSString *)num andTimeOut:(int)time successBlock:(AsySuccess)success andFailBlock:(AsyFail)fail{
+    LLAsynURLConnection *obj =[[self alloc] initForGetRequestURL:urlStr dataDic:dic andProtocolNum:num andTimeOut:time success:success fail:fail];
+    return obj;
+}
+-(id)initWithURL:(NSString *)urlStr dataDic:(NSDictionary *)dataDic andNum:(NSString *)num timeOut:(int)timeOut success:(AsySuccess)success fail:(AsyFail)fail{
+    NSURL *_url = [[NSURL alloc] initWithString:urlStr];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url cachePolicy:NSURLRequestReloadRevalidatingCacheData timeoutInterval:timeOut];
+    [request setHTTPMethod:@"POST"];
+    JSNsstring *jsstring = [[JSNsstring alloc]initStringByDictionary:dataDic];
+    [jsstring stringByAppendingString:[NSString stringWithFormat:@"protocol==%@",num]];
+    NSData *data =[jsstring dataUsingEncoding:NSUTF8StringEncoding];
+    [request setHTTPBody:data];
+
+    if ([[MyUserDefault standardUserDefaults] getCookieSid]) {
+        if ([urlStr hasSuffix:@"login"]) {
+            // 登陆请求不发送cookieSid  测试发送
+        }else{
+            [request setValue:[[MyUserDefault standardUserDefaults] getCookieSid] forHTTPHeaderField:@"Cookie"];
+        }
+    }else{
+        [request setValue:@"head" forHTTPHeaderField:@"content-length"];
+    }
+    
+    _timer =[NSTimer scheduledTimerWithTimeInterval:timeOut target:self selector:@selector(timeOut) userInfo:nil repeats:NO];
+    self =[super initWithRequest:request delegate:self startImmediately:NO];
+    if (self) {
+        [self scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        _success =[success copy];
+        _fail = [fail copy];
+        [self start];
+    }
+    return self;
+}
+-(id)initForGetRequestURL:(NSString *)urlStr dataDic:(NSDictionary *)dic andProtocolNum:(NSString *)num andTimeOut:(int) time success:(AsySuccess)success fail:(AsyFail)fail{
+    
+//    JSNsstring *string =[[JSNsstring alloc] initStringByDictionary:dic];
+    NSURL *_url = [[NSURL alloc] initWithString:urlStr ];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:_url cachePolicy:NSURLRequestReloadRevalidatingCacheData timeoutInterval:time];
+    [request setHTTPMethod:@"GET"];
+    if ([[MyUserDefault standardUserDefaults] getCookieSid]) {
+        if ([urlStr hasSuffix:@"login"]) {
+            // 登陆请求不发送cookieSid  测试发送
+        }else{
+            [request setValue:[[MyUserDefault standardUserDefaults] getCookieSid] forHTTPHeaderField:@"Cookie"];
+        }
+    }else{
+        [request setValue:@"head" forHTTPHeaderField:@"content-length"];
+    }
+
+    _timer =[NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(timeOut) userInfo:nil repeats:NO];
+    self =[super initWithRequest:request delegate:self startImmediately:NO];
+    if (self) {
+        [self scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        _success =[success copy];
+        _fail = [fail copy];
+        [self start];
+    }
+    return self;
+}
+-(void)timeOut{
+    [self connection:self didFailWithError:[NSError errorWithDomain:@"连接超时" code:timeOutErrorCode userInfo:nil]];
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+   
+    NSHTTPURLResponse *httpRep =(NSHTTPURLResponse *)response;
+//     NSLog(@" 请求响应== %@ ",httpRep.allHeaderFields);
+    if ([httpRep.allHeaderFields objectForKey:@"Set-Cookie"]) {
+        NSString *cookieSid =[httpRep.allHeaderFields objectForKey:@"Set-Cookie"];
+        [[MyUserDefault standardUserDefaults] setCookieSid:cookieSid];
+    }
+    
+    if(_data != nil){
+        [_data resetBytesInRange:NSMakeRange(0, _data.length)];
+    }else{
+        _data = [[NSMutableData alloc] init];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [_data appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    _success(_data);
+    if(_timer != nil){
+        [_timer invalidate];
+        _timer = nil;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSDictionary *dic =[NSJSONSerialization JSONObjectWithData:_data options:NSJSONReadingMutableContainers error:nil];
+        if ([[dic objectForKey:@"flag"] intValue] ==2) {
+            NSDictionary *body =[dic objectForKey:@"body"];
+            if ([[body objectForKey:@"msg"] isEqualToString:@"re login!"]) {     //重新登录请求时发送通知
+                NSLog(@" Send Relogin Message");
+                [[NSNotificationCenter defaultCenter] postNotificationName:LoginAgainNotic object:nil];
+            }
+        }
+    });
+
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    _fail(error);
+}
+
+@end

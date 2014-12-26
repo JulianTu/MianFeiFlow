@@ -1,0 +1,94 @@
+//
+//  YQLSDK.h
+//  UITest
+//
+//  Created by Wen Yunlong on 14-8-8.
+//  Copyright (c) 2014年 YuJie. All rights reserved.
+//
+
+
+#define DR_OFFERWALL    1   //积分墙
+#define DR_FREEWALL     2   //免费墙
+
+//初始化
+/*
+ key:applicationKey
+ isuse:是否开启定位
+ appuserid:用户提供的唯一标示, 推荐使用应用程序的用户名
+ */
+#define DR_INIT(key, isuse, userid) [YQLSDK initialize:key location:isuse appuserid:userid];
+
+//广告显示
+#define DR_SHOW(type, view, dg) [YQLSDK show:type on:view delegate:dg];
+
+//创建广告 param2:delegate
+#define DR_CREATE(type, dg) [YQLSDK create:type delegate:dg];
+
+//取得积分
+#define GETSCORE(score_block) [YQLSDK getScore:score_block];
+
+//消费积分
+#define SPENDSCORE(sore,score_block) [YQLSDK spendScore:sore callBack:score_block];
+
+
+@protocol SDKDelegate <NSObject>
+@optional
+
+/*
+ 请求广告条数
+ 如果广告条数大于0，那么code=0，代表成功
+ 反之code = -1
+ */
+- (void)didDataReceivedView:(UIView *)view code:(int)code;
+
+/*
+ 广告弹出时回调
+ */
+- (void)didViewOpenView:(UIView *)view;
+
+/*
+ 点击广告关闭按钮的回调，不代表广告从内存中释放
+ */
+- (void)didMainCloseView:(UIView *)view;
+
+/*
+ 广告释放时回调，从内从中释放
+ */
+- (void)didViewCloseView:(UIView *)view;
+
+/*
+ 曝光回调
+ */
+- (void)didReportedView:(UIView *)view data:(id)data;
+
+/*
+ 点击广告回调
+ */
+- (void)didClickedView:(UIView *)view data:(id)data;
+
+/*
+ 点击跳转回调
+ */
+- (void)didJumpedView:(UIView *)view data:(id)data;
+
+@end
+
+typedef void (^scoreResultCallback)(int result);
+typedef void (^spendScoreResultCallback)(NSString *result);
+
+@interface YQLSDK : NSObject<NSURLConnectionDelegate>
+
++(void)initialize:(NSString *)key location:(BOOL)value appuserid:(NSString *)appuserid;
+// 广告显示位置
++(void)show:(NSInteger)space on:(UIView *)view delegate:(id<SDKDelegate>)delegate;
+//创建广告视图
++(void)create:(NSInteger)space delegate:(id<SDKDelegate>)delegate;
+//取得积分
++(void)getScore:(scoreResultCallback) score;
+//消费积分
++(void)spendScore:(int) point callBack :(spendScoreResultCallback) score;
+#pragma mark 获取积分/积分回调 callback ?
+
+@end
+
+

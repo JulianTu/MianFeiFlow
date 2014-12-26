@@ -1,0 +1,50 @@
+#ifndef MiidiSDK_PublicFunction_h
+#define MiidiSDK_PublicFunction_h
+//confuse string at 2014年11月17日 星期一 14时47分07秒 CST
+#define MyOfferSourceItem sLXaxhLdoQiCiMcO
+#define miidiAdId jZGcMWWkTKThpfnr
+#define miidiAdTitle qlNBmlgLNrQErACl
+#define miidiAdSubtitle gNgIRscrzIuVRtSK
+#define miidiAdIconUrl MtONCNBmsaVWiFxf
+#define miidiAdEarnStep WplXUgHnDXjjBVYq
+#define miidiAdScore RbFrbbdmnQeOYvKK
+#define miidiAdAction wLVdXfeyZSuDbcgE
+#define miidiAdClick XlmdawyYqSLmzjPv
+#define miidiAdCacheType ZmwxreRIchJDtYul
+#define miidiAppName qrYDfMDdSKWmsFzM
+#define miidiAppVersion ncOKWawAombKwVXa
+#define miidiAppProvider ubrMQgByDnZJNnDA
+#define miidiAppPackage GGARxJfKFwqrpjNP
+#define miidiAppStoreId XQpxOHDxpOPmnpMm
+#define miidiAppSize eqgorXNAGWcyHXwI
+#define miidiAppImageUrls ZEuPrEcFtemptkBk
+#define miidiAppDescription bAFLgILFVkTDHzDL
+#define initMiidiSourceItemWithDictionary sHypCaiCpzAYQSlg
+#define MyOfferAPI QflTFcjvmvuuiUvv
+#define setMiidiAppPublisher TkbGeSADJawYkttB
+#define withMiidiAppSecret NFlmhTkmsnPbmweW
+#define showMiidiAppOffers uFFzkrTVywvmMhKh
+#define withMiidiDelegate rzokVminVzmNmGxz
+#define showMiidiAppOffersNoScore BgWuAygryAYQiSTx
+#define requestMiidiAppOffersSourcesWithBlock YNYIMySIiHxsOSJp
+#define requestMiidiClickAd aBmdHDFaaziTaurp
+#define setMiidiUserParam JTQFeZzfBuzCpOSx
+#define requestMiidiGetPoints HJLMBIxKVqvohxGx
+#define requestMiidiAddPoints QXqPQuGEUpyIMUzz
+#define requestMiidiCutPoints xVfVVFdjCOotDPCa
+#define getMiidiSdkVersion sRjEmnzYuWTdPBDn
+#define MyOfferAPIDelegate ChXgBLFfIOQuOvQE
+#define didMiidiReceiveOffers rsqleyUcMBvtGlOx
+#define didMiidiFailToReceiveOffers uyakNeQvzdVZnCzA
+#define didMiidiShowWallView tRmSzojGDFNIQiVo
+#define didMiidiDismissWallView VmncrwcgdVQCwljy
+#define didMiidiReceiveGetPoints QmDMMhDSkUFjoQBW
+#define forMiidiPointName NvNhRwzOvfuEtRCW
+#define didMiidiFailReceiveGetPoints ImZeqKvUHRzRbbyB
+#define didMiidiReceiveAddPoints YeeKeIwVaVOHKKOp
+#define didMiidiFailReceiveAddPoints NSaKYLCNVcvzAQzA
+#define didMiidiReceiveCutPoints gzyqJFbtrljPXlhl
+#define didMiidiFailReceiveCutPoints mijBFiMuFVccgveb
+#define myMiidiOfferViewWillAppear cMrqFqudoPlipgOv
+#define myMiidiOfferViewDidAppear FTmwxdfXPvYdcScH
+#endif

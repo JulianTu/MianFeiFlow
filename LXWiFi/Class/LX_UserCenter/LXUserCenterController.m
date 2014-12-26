@@ -1,0 +1,720 @@
+//
+//  LXUserCenterController.m
+//  乐享WiFi
+//
+//  Created by keyrun on 14-9-17.
+//  Copyright (c) 2014年 keyrun. All rights reserved.
+//
+
+#import "LXUserCenterController.h"
+#import "HeadToolBar.h"
+#import "TaoJinLabel.h"
+#import "LLCenterItem.h"
+#import "RewardListViewController.h"
+#import "LLIncomeRecordController.h"
+#import "MessageViewController.h"
+#import "RewardViewController.h"
+#import "VisitViewController.h"
+#import "SettingViewController.h"
+#import "IncomeViewController.h"
+#import "RewardListViewController.h"
+#import "LXTabViewController.h"
+#import "LotteryController.h"
+#import "CompressImage.h"
+#import "MyUserDefault.h"
+#import "AsynURLConnection.h"
+#import "User.h"
+#import "LLAsynURLConnection.h"
+#import "AsynURLConnection.h"
+#import "JSONKit.h"
+#import "StatusBar.h"
+#import "LoadingView.h"
+#import "UIAlertView+NetPrompt.h"
+#define kHeadImageOffX      20.0f
+#define kHeadImageOffY      32.0f
+#define kHeadImageSize      100.0f
+#define kFlowTextOffY       75.0f
+#define kHeadHeight         150.0f
+#define kCellHeight         kmainScreenWidth /3
+
+#define kIncome          @"流量币明细"
+#define kRewardList      @"兑换记录"
+#define kMessage         @"消息中心"
+#define kChangeReward    @"奖品兑换"
+#define kVisit           @"邀请奖励"
+#define kLottory         @"每日抽奖"
+@interface LXUserCenterController ()
+{
+    HeadToolBar *headBar ;
+    UIView *bgView;
+    NSArray *titleArr;
+    NSArray *imgsOne ;
+    NSArray *imgsTwo ;
+    UIImage *getImage;
+    UITableView *userTabel ;
+    int logBetween;
+    MScrollVIew *ms ;
+    User *user ;
+    int isNeedReload;  //标记哪个需要返回后更新提示
+    int reloadIndexRow ;
+    IncomeViewController *income ;
+    int  recordMsgCount ;
+    UINavigationController *nc;
+    int urlCount;
+    
+    int failCount ;
+}
+@end
+
+@implementation LXUserCenterController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushToMessageVC) name:PushToMessage object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushToRewardDetailsVC:) name:PushToReward object:nil];
+    }
+    return self;
+}
+
+-(void)initDataSource{
+    //    [self requestForUserInfor];
+    [self requestForUserCenter];
+    nc = (UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController ;
+}
+-(void)onClickedSetting {
+    
+    SettingViewController *setting = [[SettingViewController alloc] initWithNibName:nil bundle:nil];
+    [nc pushViewController:setting animated:YES];
+}
+-(void)pushToRewardViewVC {
+    
+    RewardViewController *rewards =[[RewardViewController alloc]initWithNibName:nil bundle:nil];
+    [nc pushViewController:rewards animated:YES];
+}
+-(void)pushToRewardDetailsVC:(NSNotification *)notic{
+    UINavigationController *navigation =(UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        RewardViewController *rewards =[[RewardViewController alloc]initWithNibName:nil bundle:nil];
+        rewards.isRemotionPush =YES;
+        rewards.pushGoodID = [[notic.userInfo objectForKey:@"pri"] intValue];
+        //        [rewards getPushRewardGoods];
+        [navigation pushViewController:rewards animated:YES];
+    });
+    
+}
+-(void)pushToMessageVC {
+    UINavigationController *navigation =(UINavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+    MessageViewController *msg =[[MessageViewController alloc] initWithNibName:nil bundle:nil];
+    [navigation pushViewController:msg animated:YES];
+}
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    _isRequesting =YES;
+    
+    
+    if (kDeviceVersion >= 7.0) {
+        ms = [[MScrollVIew alloc]initWithFrame:CGRectMake(0, 0, kmainScreenWidth, kmainScreenHeigh ) andWithPageCount:1 backgroundImg:nil];
+    }else{
+        ms = [[MScrollVIew alloc] initWithFrame:CGRectMake(0,0, kmainScreenWidth, kmainScreenHeigh -20) andWithPageCount:1 backgroundImg:nil];
+    }
+    
+    [ms setContentSize:CGSizeMake(kmainScreenWidth, ms.frame.size.height+1)];
+    ms.msDelegate =self;
+    ms.bounces =YES;
+    [self.view addSubview:ms];
+    
+    titleArr = @[kIncome ,kRewardList ,kMessage ,kChangeReward ,kVisit ,kLottory];
+    imgsOne =@[GetImage(@"icon_1"),GetImage(@"icon_2"),GetImage(@"icon_3_1")];
+    imgsTwo =@[GetImage(@"icon_4"),GetImage(@"icon_5"),GetImage(@"icon_6")];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushToRewardViewVC) name:PushToRewardViewNotic object:nil]; //push到奖品列表
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadIncomeLog:) name:ReloadIncomeLog object:nil];
+    
+    [self loadUserCenterView];
+    
+}
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    
+}
+-(void)loadUserCenterView {
+    bgView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, kmainScreenWidth, 0)];
+    bgView.backgroundColor = kBlueTextColor ;
+    
+    userTabel =[[UITableView alloc] initWithFrame:CGRectMake(0, 0, kmainScreenWidth, ms.frame.size.height) style:UITableViewStylePlain];
+    userTabel.delegate =self;
+    userTabel.dataSource =self;
+    userTabel.backgroundColor =[UIColor clearColor];
+    userTabel.separatorStyle =UITableViewCellSeparatorStyleNone;
+    
+    [ms addSubview:userTabel];
+    if (kDeviceVersion < 7.0) {
+        [ms insertSubview:bgView belowSubview:userTabel];
+    }else{
+        [self.view insertSubview:bgView belowSubview:ms];
+    }
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 3 ;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row ==0) {
+        static NSString *cellId =@"userTableHeadCell";
+        LLUserCenterCell *cell =[tableView dequeueReusableCellWithIdentifier:cellId];
+        if (!cell) {
+            cell =[[LLUserCenterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellId];
+        }
+        cell.indexRow = indexPath.row ;
+        
+        [cell loadCellHeadViewWith:@"" andFlowNum:@"0" withBlock:^{
+            [self onClickedSetting];
+        }];
+        cell.backgroundColor =kBlueTextColor;
+        cell.delegate =self;
+        for (UIView *currentView in cell.subviews)
+        {
+            if([currentView isKindOfClass:[UIScrollView class]])
+            {
+                ((UIScrollView *)currentView).delaysContentTouches = NO;
+                break;
+            }
+        }
+        
+        return cell;
+    }
+    else {
+        static NSString *cellId =@"userTableCell2";
+        LLUserCenterCell *cell =[tableView dequeueReusableCellWithIdentifier:cellId];
+        if (!cell) {
+            cell =[[LLUserCenterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        }
+        cell.indexRow = indexPath.row ;
+        if(indexPath.row == 1){
+            [cell loadSubCellWithTitle:[titleArr subarrayWithRange:NSMakeRange(0, 3)] andImgae:imgsOne];
+        }else{
+            [cell loadSubCellWithTitle:[titleArr subarrayWithRange:NSMakeRange(3, 3)] andImgae:imgsTwo];
+        }
+        cell.delegate = self;
+        for (UIView *currentView in cell.subviews)
+        {
+            if([currentView isKindOfClass:[UIScrollView class]])
+            {
+                ((UIScrollView *)currentView).delaysContentTouches = NO;
+                break;
+            }
+        }
+        
+        return cell;
+    }
+}
+-(void)onClickBtn:(UIButton *)btn andIndexRow:(int)indexRow{
+    reloadIndexRow =indexRow ;
+    if (indexRow ==1) {
+        isNeedReload =btn.tag -100;
+        switch (btn.tag) {
+            case 100:{       // 流量币明细
+                income = [[IncomeViewController alloc]initWithNibName:nil bundle:nil];
+                income.user = user;
+                [income saveUserLog:user.userLog];
+                [nc pushViewController:income animated:YES];
+            }
+                break;
+            case 101:{       // 兑换记录
+                RewardListViewController *rewardRecord =[[RewardListViewController alloc] initWithNibName:nil bundle:nil];
+                [nc pushViewController:rewardRecord animated:YES];
+            }
+                break;
+            case 102:{       //消息中心
+                MessageViewController *msgVC =[[MessageViewController alloc]initWithNibName:nil bundle:nil];
+                [[MyUserDefault standardUserDefaults]setUserMsgNum:recordMsgCount];
+                [nc pushViewController:msgVC animated:YES];
+            }
+                break ;
+            default:
+                break;
+        }
+    }else if (indexRow ==2){
+        switch (btn.tag) {
+            case 100:{       // 奖品兑换
+                RewardViewController *rewards =[[RewardViewController alloc]initWithNibName:nil bundle:nil];
+                [nc pushViewController:rewards animated:YES];
+            }
+                break;
+            case 101:{      // 邀请奖励
+                VisitViewController *visit =[[VisitViewController alloc] initWithNibName:nil bundle:nil];
+                [nc pushViewController:visit animated:YES];
+            }
+                break;
+            case 102:{      // 每天抽奖
+                LotteryController *lottery =[[LotteryController alloc] initWithNibName:nil bundle:nil];
+                [nc pushViewController:lottery animated:YES];
+            }
+                break ;
+            default:
+                break;
+        }
+    }else{
+        [self getChangeUserImg];   //选取头像
+    }
+}
+-(void)getChangeUserImg  {
+    UIActionSheet* as=[[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+    
+    as.actionSheetStyle=UIActionSheetStyleBlackTranslucent;
+    [as dismissWithClickedButtonIndex:2 animated:YES];
+    if (kDeviceVersion < 7.0) {
+        LXTabViewController *tj = [[LXTabViewController alloc]init];
+        [as showFromTabBar:tj.tabBar];
+    }else{
+        [as showInView:self.view];
+    }
+    
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    switch (buttonIndex) {
+            //拍照
+        case 0:
+        {
+            UIImagePickerControllerSourceType type=UIImagePickerControllerSourceTypeCamera;
+            if([UIImagePickerController isSourceTypeAvailable:type]){
+                UIImagePickerController* pc=[[UIImagePickerController alloc]init];
+                pc.delegate=self;
+                pc.allowsEditing=YES;
+                pc.sourceType=UIImagePickerControllerSourceTypeCamera;
+                [self presentViewController:pc animated:YES completion:nil];
+            }
+        }
+            break;
+            //从相册取相片
+        case 1:
+        {
+            UIImagePickerController* pc=[[UIImagePickerController alloc]init];
+            pc.delegate=self;
+            pc.allowsEditing=YES;
+            pc.sourceType=UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:pc animated:YES completion:nil];
+            
+        }
+            break;
+        case 2:
+        {
+            
+        }
+    }
+}
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    
+    getImage=[info objectForKey:UIImagePickerControllerEditedImage];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    if ([self isBigImage:getImage]==YES) {
+        float scalex = [UIScreen mainScreen].scale ;
+        getImage =[CompressImage imageWithOldImage:getImage scaledToSize:CGSizeMake(100 *scalex, 100 *scalex)];
+    }
+    LLUserCenterCell *cell = (LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    cell.headImage.image = getImage ;
+    
+    [self sendSaveInforRequest:getImage];    //上传图片到服务器
+}
+-(void)sendSaveInforRequest:(UIImage *)image{  // 上传成功后将换取的图片数据存在本地
+    
+    [self requestForUploadPhotoToken];
+    
+}
+-(void)requestForUploadPhotoToken{
+    NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"ucenter/picupload"];
+    
+    [[LoadingView showLoadingView] actViewStartAnimation];
+    [LLAsynURLConnection requestForMethodGetWithURL:urlStr dataDic:nil andProtocolNum:@"40007" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSLog(@" 获取上传图片密钥 == %@ ",dataDic);
+            if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+                NSDictionary *body =[dataDic objectForKey:@"body"];
+                NSString *key =[body objectForKey:@"upload_key"];
+                if (key) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self requestForPostPhotoWithKey:key];
+                    });
+                    
+                }
+                
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[LoadingView showLoadingView] actViewStopAnimation];
+                    [StatusBar showTipMessageWithStatus:@"更换失败，请再次更换" andImage:nil andTipIsBottom:YES];
+                });
+            }
+        });
+        [[LoadingView showLoadingView] actViewStopAnimation];
+        
+    } andFailBlock:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+            [StatusBar showTipMessageWithStatus:@"更换失败，请再次更换" andImage:nil andTipIsBottom:YES];
+        });
+    }];
+}
+/**
+ *  上传用户头像
+ *
+ *  @param key 密钥
+ */
+-(void)requestForPostPhotoWithKey:(NSString*) key{
+    NSString *adress =[[MyUserDefault standardUserDefaults] getPhotoServiceAdress];
+    if (adress) {
+        NSString *userID = [[MyUserDefault standardUserDefaults]getUserId];
+        NSLog(@" 传图密钥 == %@",key);
+        NSMutableDictionary* dic2=[[NSMutableDictionary alloc]initWithObjectsAndKeys:userID,@"uid",key,@"upload_key", nil];
+        NSString* paramStr =[dic2 JSONString];
+        UIImage* image =getImage;
+        [dic2 setObject:image forKey:[NSString stringWithFormat:@"userpic"]];
+        NSData* data12 =UIImageJPEGRepresentation(image, 1.0);
+        
+        NSString* urlStr =adress;
+        NSURL* url =[NSURL URLWithString:urlStr];
+        NSMutableURLRequest* urlRequest=[[NSMutableURLRequest alloc]initWithURL:url cachePolicy:NSURLRequestReloadRevalidatingCacheData timeoutInterval:10.0];
+        NSString* boundary =@"0xKhTmLbOuNdArY";
+        NSString* contentType= [NSString stringWithFormat:@"multipart/form-data;boundary=%@",boundary];
+        [urlRequest setValue:contentType forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setHTTPMethod:@"POST"];
+        
+        NSMutableData* body =[NSMutableData data];
+        [body appendData:[[NSString stringWithFormat:@"\n--%@\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition:form-data;name='param';value='%@'\n\n",paramStr] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [body appendData:[[NSString stringWithFormat:@"{\"uid\":\"%@\",\"upload_key\":\"%@\"}",userID,key] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"\n--%@\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        //第二段
+        int imageTag=0;
+        for (NSString* key in dic2.allKeys) {
+            id value =[dic2 objectForKey:key];
+            
+            if ([value isKindOfClass:[UIImage class]]) {
+                NSData* dataImg;
+                if (data12.length >10240) {
+                    dataImg= UIImageJPEGRepresentation(value, 0.5);
+                }else{
+                    dataImg= UIImageJPEGRepresentation(value, 1);
+                }
+                [body appendData:[[NSString stringWithFormat:@"\n--%@\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:[[NSString stringWithFormat:@"Content-Disposition:form-data;name='userfile%d';filename='userfile.jpg'\n",imageTag] dataUsingEncoding:NSUTF8StringEncoding]];
+                imageTag++;
+                [body appendData:[[NSString stringWithFormat:@"Content-Type:image/jpg\n\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+                [body appendData:dataImg];
+                [body appendData:[[NSString stringWithFormat:@"\n--%@--\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                
+            }
+        }
+        [urlRequest setHTTPBody:body];
+        
+        NSLog(@" 发送上传头像请求 == %@ %@",urlStr ,paramStr);
+        if (![[LoadingView showLoadingView] actViewIsAnimation]) {
+            [[LoadingView showLoadingView] actViewStartAnimation];
+        }
+        [AsynURLConnection requestWithURLToSendJSONL:adress boundary:boundary paramStr:paramStr body:body timeOut:httpTimeout +30 success:^(NSData *data) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                NSArray *dicArr =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                NSLog(@" 获取上传用户头像数据 == %@  %@",dicArr,[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                
+                if (dicArr.count >0) {
+                    NSDictionary *dic = [dicArr objectAtIndex:0];
+                    
+                    if ([dic objectForKey:@"success"]) {
+                        NSData *userImgData = UIImagePNGRepresentation(image);
+                        [[MyUserDefault standardUserDefaults]setUserPic:userImgData];
+                        
+                        NSDictionary *dataDic =[dic objectForKey:@"success"];
+                        NSString *urlAdress =[dataDic objectForKey:@"url_name"];
+                        NSLog(@"  用户头像上传成功url == %@ ",urlAdress);
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [StatusBar showTipMessageWithStatus:@"更换成功" andImage:nil andTipIsBottom:YES];
+                            [self requestForPostPhotoURL:urlAdress];
+                        });
+                    }else{
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [[LoadingView showLoadingView] actViewStopAnimation];
+                            [StatusBar showTipMessageWithStatus:@"更换失败，请再次更换" andImage:nil andTipIsBottom:YES];
+                        });
+                        
+                    }
+                }else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[LoadingView showLoadingView] actViewStopAnimation];
+                        [StatusBar showTipMessageWithStatus:@"更换失败，请再次更换" andImage:nil andTipIsBottom:YES];
+                    });
+                }
+                
+            });
+        } fail:^(NSError *error) {
+            NSLog(@"  上传错误  ==%@ ",error);
+            [StatusBar showTipMessageWithStatus:@"更换失败，请再次更换" andImage:nil andTipIsBottom:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[LoadingView showLoadingView] actViewStopAnimation];
+            });
+        }];
+        
+    }
+}
+/**
+ *  将图片地址传给Service
+ *
+ *  @param photoUrl
+ */
+-(void) requestForPostPhotoURL:(NSString *)photoUrl{
+    NSString *urlStr =[NSString stringWithFormat:kOnlineWeb,@"ucenter/avatar"];
+    NSDictionary *dic =@{@"pics":@[photoUrl]};
+    NSLog(@" 上传图片地址==%@ ",dic);
+    [LLAsynURLConnection requestURLWith:urlStr dataDic:dic andProtocolNum:@"40008" andTimeOut:httpTimeout connectSuccess:^(NSData *data) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSDictionary *dataDic =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+            NSLog(@"POST图片地址 ==%@  ",dataDic);
+            if ([[dataDic objectForKey:@"flag"] intValue] ==1) {
+                
+            }
+        });
+        
+        [[LoadingView showLoadingView] actViewStopAnimation];
+        
+    } andFail:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+        });
+        urlCount ++;
+        if (urlCount < 3) {
+            [self requestForPostPhotoURL:photoUrl];
+        }
+    }];
+}
+-(BOOL)isBigImage:(UIImage*)image{
+    NSData* data =UIImageJPEGRepresentation(image, 1.0);
+    
+    if (data.length >10240) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    float offY = scrollView.contentOffset.y;
+    
+    if (offY < 0) {
+        if (kDeviceVersion < 7.0) {
+            bgView.frame = CGRectMake(0, 0, bgView.frame.size.width, -1*offY);
+        }else{
+            bgView.frame = CGRectMake(bgView.frame.origin.x, bgView.frame.origin.y, bgView.frame.size.width, offY *-1);
+        }
+    }
+    
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row ==0) {
+        float headH = kDeviceVersion <7.0? kHeadHeight -20 :kHeadHeight;
+        if ([UIScreen mainScreen].scale ==3 ) {
+            return headH +50.0f;
+        }else{
+            
+            return  headH;
+        }
+    }else{
+        return kCellHeight;
+    }
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+}
+
+/**
+ *  请求用户信息
+ */
+-(void) requestForUserCenter{
+    if ([[LoadingView showLoadingView] actViewIsAnimation]) {
+        [[LoadingView showLoadingView] actViewStopAnimation];
+    }
+    [[LoadingView showLoadingView] actViewStartAnimation];
+    NSString *url =[NSString stringWithFormat:kOnlineWeb,@"ucenter"];
+    [LLAsynURLConnection requestForMethodGetWithURL:url dataDic:nil andProtocolNum:@"40001" andTimeOut:httpTimeout successBlock:^(NSData *data) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            _isRequesting = NO;
+            NSError *error;
+            NSDictionary *dataDic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            NSLog(@"请求获取我的中心的信息【response】 = %@",dataDic);
+            int flag = [[dataDic objectForKey:@"flag"] intValue];
+            if(flag == 1){
+                NSDictionary *body = [dataDic objectForKey:@"body"];
+                user = [[User alloc] initWithDictionary:body];
+                NSString *appDeclare = [body objectForKey:@"shengming"];
+                NSString *commentQuestion =[body objectForKey:@"common_help"];
+                [[MyUserDefault standardUserDefaults] setAppCommentQuestionURL:commentQuestion];
+                [[MyUserDefault standardUserDefaults] setAppDeclareURL:appDeclare];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[LoadingView showLoadingView] actViewStopAnimation];
+                    LLUserCenterCell *msgCell = (LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+                    LLUserCenterCell *headCell = (LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    if ([body objectForKey:@"gold"]) {
+                        
+                        [headCell changeUserCoin:[body objectForKey:@"gold"]];
+                        
+                    }
+                    if ([body objectForKey:@"uid"]) {
+                        [headCell changeUserNumber:[body objectForKey:@"uid"]];
+                    }
+                    NSData *userIcon =[[MyUserDefault standardUserDefaults]getUserPic];
+                    if (userIcon) {
+                        headCell.headImage.image =[UIImage imageWithData:userIcon];
+                    }else{
+                        if ([body objectForKey:@"pic"]) {
+                            [headCell changeUserIcon:[body objectForKey:@"pic"]];
+                        }
+                    }
+                    int log =0 ;
+                    if (![[MyUserDefault standardUserDefaults]getUserLog]) {
+                        logBetween =user.userBean;
+                        if (user.userBean >0) {
+                            [msgCell changeIncomeLab:[NSString stringWithFormat:@"+%d",logBetween] type:1];
+                        }
+                        
+                    }else{
+                        log = [[[MyUserDefault standardUserDefaults]getUserLog] integerValue];
+                        
+                        logBetween =user.userLog -log;
+                        
+                        if (logBetween > 0) {
+                            
+                            [msgCell changeIncomeLab:[NSString stringWithFormat:@"+%d",logBetween] type:1];
+                        }else if (logBetween < 0){
+                            [msgCell changeIncomeLab:[NSString stringWithFormat:@"%d",logBetween] type:2];
+                        }else{
+                            [msgCell changeIncomeLab:@"" type:1];
+                        }
+                    }
+                    int count =[[body objectForKey:@"message"]integerValue];
+                    if (![[MyUserDefault standardUserDefaults] getUserMsgNum]) {
+                        //                    [[MyUserDefault standardUserDefaults]setUserMsgNum:count];
+                        recordMsgCount = [[body objectForKey:@"message"] intValue];
+                        if (count != 0) {
+                            [msgCell changeMsgLab:[NSString stringWithFormat:@"%d",count]];
+                        }
+                        
+                    }else{
+                        
+                        if ([[body objectForKey:@"message"]integerValue]!=0) {
+                            int oldMsgCount = [[[MyUserDefault standardUserDefaults] getUserMsgNum] intValue];
+                            if (count == oldMsgCount) {
+                                [msgCell changeMsgLab:nil];
+                            }else{
+                                int between = count -oldMsgCount;
+                                [msgCell changeMsgLab:[NSString stringWithFormat:@"%d",between]];
+                            }
+                            //                        [[MyUserDefault standardUserDefaults]setUserMsgNum:count];
+                            
+                        }
+                        else {
+                            [msgCell changeMsgLab:nil];
+                        }
+                    }
+                });
+                
+                
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                   [[LoadingView showLoadingView] actViewStopAnimation];
+                });
+            }
+            
+        });
+        
+        NSLog(@" 获取流量中心 ==%@ ",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    } andFailBlock:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[LoadingView showLoadingView] actViewStopAnimation];
+        });
+        failCount ++ ;
+        if (failCount < 3) {
+            [self requestForUserCenter];
+        }else{
+            failCount =0;
+            if(![UIAlertView isInit]){
+                UIAlertView *alertView = [UIAlertView showNetAlert];
+                alertView.delegate = self;
+                alertView.tag = kTimeOutTag;
+                [alertView show];
+                alertView = nil;
+            }
+            
+        }
+        
+    }];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(alertView.tag == kTimeOutTag){
+        if(buttonIndex == 0){
+            [alertView dismissWithClickedButtonIndex:0 animated:YES];
+            [UIAlertView resetNetAlertNil];
+            [[LoadingView showLoadingView] actViewStartAnimation];
+            [self requestForUserCenter];
+        }
+    }
+}
+/**
+ *  更新收支明细 和用户流量币
+ */
+-(void)reloadIncomeLog:(NSNotification *)notic{
+    NSDictionary *dic =[notic userInfo];
+    int chageLog =[[dic objectForKey:IncomeNoticKey] intValue];
+    LLUserCenterCell *cell =(LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+    int oldIncome = [cell.oneLab.text intValue];
+    int total = oldIncome +chageLog ;
+    if (total >0) {
+        [cell changeIncomeLab:[NSString stringWithFormat:@"+%d",total] type:1];
+    }else if (total ==0){
+        
+    }
+    else{
+        [cell changeIncomeLab:NSStringFromInt(total) type:0];
+    }
+    
+    long userNum = [[[MyUserDefault standardUserDefaults] getUserBeanNum] longValue];
+    LLUserCenterCell *cellHead =(LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    int allNum =userNum + chageLog ;
+    [cellHead changeUserCoin:NSStringFromInt(allNum)];
+    [[MyUserDefault standardUserDefaults] setUserBeanNum:allNum];
+    user.userLog =allNum ;
+    
+}
+-(void)initCellData{   //更新提示信息
+    if (reloadIndexRow ==1) {
+        LLUserCenterCell *cell =(LLUserCenterCell *)[userTabel cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        switch (isNeedReload) {
+            case 0:
+                [cell changeIncomeLab:nil type:0];
+                break;
+            case 2:
+                [cell changeMsgLab:nil];
+                break;
+        }
+    }
+}
+-(void)viewDidDisappear:(BOOL)animated{
+    if ([[LoadingView showLoadingView] actViewIsAnimation]) {
+        [[LoadingView showLoadingView] actViewStopAnimation];
+    }
+}
+-(void)viewWillAppear:(BOOL)animated{
+    self.navigationController.navigationBar.hidden =YES;
+    [self initCellData];
+    //    [self reloadUserAllFlowNum];
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+@end

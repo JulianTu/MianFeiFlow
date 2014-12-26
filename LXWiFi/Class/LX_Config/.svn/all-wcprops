@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/wifi/!svn/ver/9/Code/IOS/LXWiFi/LXWiFi/Class/LX_Config
+END
+AppMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/wifi/!svn/ver/341/Code/IOS/LXWiFi/LXWiFi/Class/LX_Config/AppMacro.h
+END
+UtilsMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/wifi/!svn/ver/341/Code/IOS/LXWiFi/LXWiFi/Class/LX_Config/UtilsMacro.h
+END
+NotificationMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/wifi/!svn/ver/341/Code/IOS/LXWiFi/LXWiFi/Class/LX_Config/NotificationMacro.h
+END
+VendorMacro.h
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/wifi/!svn/ver/341/Code/IOS/LXWiFi/LXWiFi/Class/LX_Config/VendorMacro.h
+END
